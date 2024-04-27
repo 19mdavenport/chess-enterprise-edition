@@ -1,7 +1,9 @@
 package server;
 
 import dataaccess.DataAccess;
+import dataaccess.DataAccessException;
 import dataaccess.memory.MemoryDataAccess;
+import dataaccess.mysql.MySqlDataAccess;
 import handler.*;
 import service.BadRequestException;
 import service.ChessServerException;
@@ -18,7 +20,12 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        DataAccess dataAccess = new MemoryDataAccess();
+        DataAccess dataAccess;
+        try {
+            dataAccess = new MySqlDataAccess();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", new RegisterHandler(dataAccess));
