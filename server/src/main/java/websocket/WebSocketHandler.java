@@ -86,7 +86,7 @@ public class WebSocketHandler {
 
     private void sendError(Session session, String message, String input) throws IOException {
         connectionManager.sendError(session, message);
-        LOGGER.info("Error to {}: Input was: {}", session.getRemoteAddress(), message);
+        LOGGER.info("Error to {}: Error message: {} Input was: {}", session.getRemoteAddress(), message, input);
     }
 
 
