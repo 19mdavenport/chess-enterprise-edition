@@ -10,6 +10,7 @@ import service.ChessServerException;
 import service.RequestItemTakenException;
 import service.UnauthorizedException;
 import spark.*;
+import websocket.WebSocketHandler;
 
 import java.net.HttpURLConnection;
 
@@ -26,6 +27,11 @@ public class Server {
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
+
+        WebSocketHandler ws = WebSocketHandler.getInstance();
+        ws.setDataAccess(dataAccess);
+
+        Spark.webSocket("/ws", ws);
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", new RegisterHandler(dataAccess));

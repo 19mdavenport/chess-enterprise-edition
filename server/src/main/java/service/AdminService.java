@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
+import websocket.WebSocketHandler;
 
 public class AdminService {
     private final DataAccess dataAccess;
@@ -15,6 +16,7 @@ public class AdminService {
             dataAccess.getAuthDAO().clear();
             dataAccess.getGameDAO().clear();
             dataAccess.getUserDAO().clear();
+            WebSocketHandler.getInstance().clear();
         }catch (DataAccessException e) {
             throw new ChessServerException(e);
         }
