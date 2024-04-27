@@ -3,7 +3,12 @@ package data;
 import chess.ChessGame;
 import ui.*;
 import web.ServerFacade;
+import web.WebSocketClient;
+import web.WebSocketClientObserver;
 
+import javax.websocket.DeploymentException;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class DataCache {
     private static DataCache instance = new DataCache();
@@ -13,7 +18,7 @@ public class DataCache {
     private DataCache(){}
 
     public enum State {
-        LOGGED_OUT, LOGGED_IN
+        LOGGED_OUT, LOGGED_IN, IN_GAME
     }
 
     private String serverUrl;
@@ -36,9 +41,13 @@ public class DataCache {
 
     private ChessGame lastGame;
 
+    private WebSocketClient webSocketClient;
 
-    public void setRunOptions(String host, int port) {
+
+    public void setRunOptions(String host, int port, WebSocketClientObserver observer)
+            throws DeploymentException, URISyntaxException, IOException {
         facade = new ServerFacade("http://%s:%d".formatted(host, port));
+        webSocketClient = new WebSocketClient(observer, host, port);
     }
 
 
@@ -85,6 +94,7 @@ public class DataCache {
         userInterface = switch (state) {
             case LOGGED_OUT -> new LoginUserInterface();
             case LOGGED_IN -> new MainUserInterface();
+            case IN_GAME -> new GameUserInterface();
         };
     }
 
@@ -122,4 +132,7 @@ public class DataCache {
         this.lastGame = lastGame;
     }
 
+    public WebSocketClient getWebSocketClient() {
+        return webSocketClient;
+    }
 }

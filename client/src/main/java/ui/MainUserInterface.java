@@ -58,43 +58,15 @@ public class MainUserInterface implements UserInterface {
 
 
     private CommandOutput join(String[] args) {
-        if (args.length != 2) return new CommandOutput("Usage: join <GAME ID> <COLOR>", false);
-        ChessGame.TeamColor color;
-        try {
-            color = ChessGame.TeamColor.valueOf(args[1].toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return new CommandOutput("Unable to parse " + args[1] + " as a color", false);
-        }
-
-        int gameID;
-        try {
-            gameID = Integer.parseInt(args[0]);
-        } catch (NumberFormatException e) {
-            return new CommandOutput("Unable to parse " + args[0] + " as a game id", false);
-        }
-
-
-        JoinGameRequest request = new JoinGameRequest(color, gameID);
-        DataCache.getInstance().getFacade().joinGame(request);
-        DataCache.getInstance().setGameId(gameID);
-        DataCache.getInstance().setPlayerColor(color);
-
-        BoardPrinter.printGame(new ChessGame(), ChessBoardColorScheme.COLOR_SCHEMES[0],
-                color, new HashSet<>(), new HashSet<>());
-
-        return new CommandOutput("", true);
+        return connectToGame(args, true);
     }
 
 
     private CommandOutput list() {
-        ListGamesResponse result = DataCache.getInstance().getFacade().listGames();
-
-        if (result.games().isEmpty()) {
+        retreiveGames();
+        if (games.isEmpty()) {
             return new CommandOutput("There are no open games", true);
         }
-
-        games = new ArrayList<>(result.games());
-        games.sort(Comparator.comparingInt(GameData::gameID));
 
         int longestName = 1;
         int longestWhiteUsername = 4;
@@ -104,7 +76,7 @@ public class MainUserInterface implements UserInterface {
                 longestWhiteUsername = game.whiteUsername().length();
         }
 
-        int gameNumOffset = String.valueOf(games.size()).length() + 4;
+        int gameNumOffset = String.valueOf(games.size()).length() + 1;
         int gameNameOffset = longestName + 4;
         int whiteUsernameOffset = longestWhiteUsername + 4;
 
@@ -143,7 +115,21 @@ public class MainUserInterface implements UserInterface {
 
 
     private CommandOutput watch(String[] args) {
-        if (args.length != 1) return new CommandOutput("Usage: watch <GAME ID>", false);
+        return connectToGame(args, false);
+    }
+
+    private CommandOutput connectToGame(String[] args, boolean join) {
+        if (join && args.length != 2) return new CommandOutput("Usage: join <GAME ID> <COLOR>", false);
+        else if (!join && args.length != 1) return new CommandOutput("Usage: watch <GAME ID>", false);
+
+        ChessGame.TeamColor color = null;
+        if(join) {
+            try {
+                color = ChessGame.TeamColor.valueOf(args[1].toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return new CommandOutput("Unable to parse " + args[1] + " as a color", false);
+            }
+        }
 
         int gameNum;
         try {
@@ -151,21 +137,33 @@ public class MainUserInterface implements UserInterface {
         } catch (NumberFormatException e) {
             return new CommandOutput("Unable to parse " + args[0] + " as a game number", false);
         }
-
+        if(games == null) retreiveGames();
         if(gameNum < 1 || gameNum > games.size()) {
             return new CommandOutput("Invalid game number " + gameNum, false);
         }
 
         int gameID = games.get(gameNum - 1).gameID();
-        JoinGameRequest request = new JoinGameRequest(null, gameID);
-        DataCache.getInstance().getFacade().joinGame(request);
+        if(join) {
+            JoinGameRequest request = new JoinGameRequest(color, gameID);
+            DataCache.getInstance().getFacade().joinGame(request);
+        }
         DataCache.getInstance().setGameId(gameID);
-        DataCache.getInstance().setPlayerColor(null);
+        DataCache.getInstance().setPlayerColor(color);
 
-        BoardPrinter.printGame(new ChessGame(), ChessBoardColorScheme.COLOR_SCHEMES[0],
-                ChessGame.TeamColor.WHITE, new HashSet<>(), new HashSet<>());
+        try {
+            DataCache.getInstance().getWebSocketClient().connect();
+            DataCache.getInstance().setState(DataCache.State.IN_GAME);
+        } catch (IOException e) {
+            return new CommandOutput("Could not connect to game: " + e.getMessage(), false);
+        }
 
         return new CommandOutput("", true);
+    }
+
+    private void retreiveGames() {
+        ListGamesResponse result = DataCache.getInstance().getFacade().listGames();
+        games = new ArrayList<>(result.games());
+        games.sort(Comparator.comparingInt(GameData::gameID));
     }
 
 }

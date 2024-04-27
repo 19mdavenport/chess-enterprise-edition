@@ -110,22 +110,20 @@ public class WebSocketHandler {
 
 
     private void leave(Session session, String username, GameData game) throws IOException, DataAccessException {
+        String description = "watching";
         if (username.equals(game.whiteUsername())) {
             game = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
+            description = "playing as white";
             dataAccess.getGameDAO().updateGame(game);
         } else if (username.equals(game.blackUsername())) {
             game = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
+            description = "playing as black";
             dataAccess.getGameDAO().updateGame(game);
         }
 
         connectionManager.removeSession(game.gameID(), session);
 
-        String description = "is no longer watching";
-        if (Objects.equals(username, game.blackUsername()) || Objects.equals(username, game.whiteUsername())) {
-            description = "has left the game";
-        }
-
-        ServerMessage notify = new NotificationMessage("User " + username + " " + description);
+        ServerMessage notify = new NotificationMessage("User " + username + " is no longer " + description);
         String notifyJson = gson.toJson(notify);
 
         connectionManager.broadcast(notifyJson, game.gameID(), session);
@@ -170,10 +168,10 @@ public class WebSocketHandler {
             extra = "Checkmate. " + username + " wins!";
             game.game().setActive(false);
         } else if (game.game().isInStalemate(game.game().getTeamTurn())) {
-            extra = "The game ends in a stalemate.";
+            extra = "The game ends in a stalemate";
             game.game().setActive(false);
         } else if (game.game().isInCheck(game.game().getTeamTurn())) {
-            extra = "Check.";
+            extra = "Check";
         }
         if (extra != null) {
             notify = new NotificationMessage(extra);
@@ -210,7 +208,7 @@ public class WebSocketHandler {
         }
 
         if (!game.game().isActive()) {
-            throw new WebsocketException("Error: GameData is over");
+            throw new WebsocketException("Error: Game is over");
         }
     }
 

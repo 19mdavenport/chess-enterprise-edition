@@ -1,14 +1,18 @@
 package ui;
 
+import chess.ChessGame;
 import data.DataCache;
+import web.WebSocketClientObserver;
+import websocket.messages.ServerMessage;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
-public class Repl {
+public class Repl implements WebSocketClientObserver {
 
     public void run() {
-        System.out.println("\uD83D\uDC36 Welcome to Chess. Sign in to start.");
+        System.out.println(EscapeSequences.BLACK_QUEEN + "Welcome to Chess. Sign in to start." + EscapeSequences.BLACK_QUEEN);
         System.out.print(DataCache.getInstance().getUi().help());
 
         Scanner scanner = new Scanner(System.in);
@@ -38,4 +42,25 @@ public class Repl {
                 DataCache.getInstance().getUi().getPromptText() + " >>> " + EscapeSequences.SET_TEXT_COLOR_GREEN +
                 EscapeSequences.RESET_TEXT_ITALIC);
     }
+
+    @Override
+    public void loadGame(ChessGame game) {
+        if(DataCache.getInstance().getLastGame() == null) DataCache.getInstance().setLastGame(game);
+        BoardPrinter.printGame(game, DataCache.getInstance().getLastGame());
+        DataCache.getInstance().setLastGame(game);
+        printPrompt();
+    }
+
+    @Override
+    public void notify(String message) {
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA + message+ EscapeSequences.RESET_TEXT_COLOR);
+        printPrompt();
+    }
+
+    @Override
+    public void error(String message) {
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.RESET_TEXT_COLOR);
+        printPrompt();
+    }
+
 }
