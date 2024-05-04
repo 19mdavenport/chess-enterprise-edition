@@ -48,7 +48,8 @@ public class GameService {
     public synchronized void joinGame(JoinGameRequest request, String authToken) throws ChessServerException {
         try {
             GameData game = dataAccess.getGameDAO().findGame(request.gameID());
-            if (game == null || request.playerColor() == null) throw new BadRequestException("Error: Game not found");
+            if (game == null) throw new BadRequestException("Error: Game not found");
+            if (request.playerColor() == null) throw new BadRequestException("Error: Not a valid color");
 
             AuthData auth = authorization(authToken);
 
