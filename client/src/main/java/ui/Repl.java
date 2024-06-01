@@ -45,7 +45,9 @@ public class Repl implements WebSocketClientObserver {
 
     @Override
     public void loadGame(ChessGame game) {
-        if(DataCache.getInstance().getLastGame() == null) DataCache.getInstance().setLastGame(game);
+        if(DataCache.getInstance().getLastGame() == null) {
+            DataCache.getInstance().setLastGame(game);
+        }
         BoardPrinter.printGame(game, DataCache.getInstance().getLastGame());
         DataCache.getInstance().setLastGame(game);
         printPrompt();

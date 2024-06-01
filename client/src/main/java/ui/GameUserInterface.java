@@ -47,26 +47,36 @@ public class GameUserInterface implements UserInterface {
     }
 
     private CommandOutput highlight(String[] args) {
-        if (args.length != 1) return new CommandOutput("Usage: highlight <position> (e.g. f5)", false);
+        if (args.length != 1) {
+            return new CommandOutput("Usage: highlight <position> (e.g. f5)", false);
+        }
         ChessPosition position = parsePosition(args[0]);
-        if (position == null) return new CommandOutput("Could not parse %s as a position".formatted(args[0]), false);
+        if (position == null) {
+            return new CommandOutput("Could not parse %s as a position".formatted(args[0]), false);
+        }
         BoardPrinter.printGame(DataCache.getInstance().getLastGame(), position);
         return new CommandOutput("", true);
     }
 
     private CommandOutput makeMove(String[] args) {
-        if (args.length < 2 || args.length > 3)
+        if (args.length < 2 || args.length > 3) {
             return new CommandOutput("Usage: move <source> <destination> <optional promotion>(e.g. f5 e4 q)", false);
+        }
 
         ChessPosition start = parsePosition(args[0]);
-        if (start == null) return new CommandOutput("Could not parse %s as a position".formatted(args[0]), false);
+        if (start == null) {
+            return new CommandOutput("Could not parse %s as a position".formatted(args[0]), false);
+        }
         ChessPosition end = parsePosition(args[1]);
-        if (end == null) return new CommandOutput("Could not parse %s as a position".formatted(args[1]), false);
+        if (end == null) {
+            return new CommandOutput("Could not parse %s as a position".formatted(args[1]), false);
+        }
 
         ChessPiece.PieceType promotion = null;
         if (args.length == 3) {
-            if (args[2].length() != 1)
+            if (args[2].length() != 1) {
                 return new CommandOutput("Could not parse %s as a piece type".formatted(args[3]), false);
+            }
             switch (args[2].charAt(0)) {
                 case 'q' -> promotion = ChessPiece.PieceType.QUEEN;
                 case 'r' -> promotion = ChessPiece.PieceType.ROOK;
@@ -94,7 +104,9 @@ public class GameUserInterface implements UserInterface {
     }
 
     private ChessPosition parsePosition(String parse) {
-        if (parse.length() != 2) return null;
+        if (parse.length() != 2) {
+            return null;
+        }
         try {
             int row = Integer.parseInt(parse.substring(1, 2));
             int col = parse.charAt(0) - 96;
@@ -110,7 +122,9 @@ public class GameUserInterface implements UserInterface {
     }
 
     private CommandOutput colors(String[] args) {
-        if (args.length != 1) return new CommandOutput("colors <color number>", false);
+        if (args.length != 1) {
+            return new CommandOutput("colors <color number>", false);
+        }
         try {
             int newColor = Integer.parseInt(args[0]);
             if(newColor < 1) {
@@ -139,7 +153,9 @@ public class GameUserInterface implements UserInterface {
                 return new CommandOutput("Could not resign: " + e.getMessage(), false);
             }
         }
-        else return new CommandOutput("You did not resign", true);
+        else {
+            return new CommandOutput("You did not resign", true);
+        }
     }
 
     private CommandOutput leave() {

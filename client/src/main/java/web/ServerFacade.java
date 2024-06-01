@@ -110,8 +110,10 @@ public class ServerFacade {
             }
 
             String resp = readString(http.getInputStream());
-            if(responseClass != null) return gson.fromJson(resp, responseClass);
-            else return null;
+            if(responseClass != null) {
+                return gson.fromJson(resp, responseClass);
+            }
+            return null;
         } catch (IOException | URISyntaxException e) {
             throw new ResponseException("Error connecting to server", e);
         }

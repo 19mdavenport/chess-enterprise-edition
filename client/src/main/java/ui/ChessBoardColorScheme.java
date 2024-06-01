@@ -85,9 +85,9 @@ public class ChessBoardColorScheme {
     }
 
     public String setColor(boolean text, int r, int g, int b) {
-        if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
+        if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
             throw new IllegalArgumentException("Colors must be between 0 - 255");
-
+        }
         return "\u001b[" + ((text) ? "3" : "4") + "8;2;" + r + ";" + g + ";" + b + "m";
     }
 

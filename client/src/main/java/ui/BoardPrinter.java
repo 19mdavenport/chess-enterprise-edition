@@ -27,7 +27,9 @@ public class BoardPrinter {
     private static void printGame(ChessGame game, ChessPosition position, Collection<ChessPosition> differences) {
         System.out.println();
         ChessGame.TeamColor perspective = DataCache.getInstance().getPlayerColor();
-        if (perspective == null) perspective = ChessGame.TeamColor.WHITE;
+        if (perspective == null) {
+            perspective = ChessGame.TeamColor.WHITE;
+        }
         ChessBoardColorScheme colorScheme = DataCache.getInstance().getColorScheme();
         printHeader(colorScheme, perspective);
 
@@ -53,15 +55,20 @@ public class BoardPrinter {
                         ChessBoardColorScheme.ColorType.DARK_SQUARE;
 
 
-                if (highlight.contains(pos)) type =
-                        (lightSquare) ? ChessBoardColorScheme.ColorType.HIGHLIGHT_MOVES_LIGHT :
-                                ChessBoardColorScheme.ColorType.HIGHLIGHT_MOVES_DARK;
-                else if (differences.contains(pos)) type = ChessBoardColorScheme.ColorType.MOVE_MADE;
+                if (highlight.contains(pos)) {
+                    type = (lightSquare) ? ChessBoardColorScheme.ColorType.HIGHLIGHT_MOVES_LIGHT :
+                                    ChessBoardColorScheme.ColorType.HIGHLIGHT_MOVES_DARK;
+                }
+                else if (differences.contains(pos)) {
+                    type = ChessBoardColorScheme.ColorType.MOVE_MADE;
+                }
 
                 System.out.print(colorScheme.getColorEscapeSequence(type));
 
                 ChessPiece piece = game.getBoard().getPiece(pos);
-                if (piece == null) System.out.print(EscapeSequences.EMPTY);
+                if (piece == null) {
+                    System.out.print(EscapeSequences.EMPTY);
+                }
                 else {
                     System.out.print(switch (piece.getTeamColor()) {
                         case WHITE -> colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.WHITE_PIECE);

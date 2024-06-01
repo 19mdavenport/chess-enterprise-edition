@@ -49,7 +49,9 @@ public class MainUserInterface implements UserInterface {
 
 
     private CommandOutput create(String[] args) {
-        if (args.length != 1) return new CommandOutput("Usage: create <GAME NAME>", false);
+        if (args.length != 1) {
+            return new CommandOutput("Usage: create <GAME NAME>", false);
+        }
         GameData request = new GameData(0, null, null, args[0], null);
         GameData response = DataCache.getInstance().getFacade().createGame(request);
 
@@ -71,9 +73,12 @@ public class MainUserInterface implements UserInterface {
         int longestName = 1;
         int longestWhiteUsername = 4;
         for (GameData game : games) {
-            if (game.gameName().length() > longestName) longestName = game.gameName().length();
-            if (game.whiteUsername() != null && game.whiteUsername().length() > longestWhiteUsername)
+            if (game.gameName().length() > longestName) {
+                longestName = game.gameName().length();
+            }
+            if (game.whiteUsername() != null && game.whiteUsername().length() > longestWhiteUsername) {
                 longestWhiteUsername = game.whiteUsername().length();
+            }
         }
 
         int gameNumOffset = String.valueOf(games.size()).length() + 1;
@@ -119,8 +124,12 @@ public class MainUserInterface implements UserInterface {
     }
 
     private CommandOutput connectToGame(String[] args, boolean join) {
-        if (join && args.length != 2) return new CommandOutput("Usage: join <GAME ID> <COLOR>", false);
-        else if (!join && args.length != 1) return new CommandOutput("Usage: watch <GAME ID>", false);
+        if (join && args.length != 2) {
+            return new CommandOutput("Usage: join <GAME ID> <COLOR>", false);
+        }
+        else if (!join && args.length != 1) {
+            return new CommandOutput("Usage: watch <GAME ID>", false);
+        }
 
         ChessGame.TeamColor color = null;
         if(join) {
@@ -137,7 +146,9 @@ public class MainUserInterface implements UserInterface {
         } catch (NumberFormatException e) {
             return new CommandOutput("Unable to parse " + args[0] + " as a game number", false);
         }
-        if(games == null) retreiveGames();
+        if(games == null) {
+            retreiveGames();
+        }
         if(gameNum < 1 || gameNum > games.size()) {
             return new CommandOutput("Invalid game number " + gameNum, false);
         }
