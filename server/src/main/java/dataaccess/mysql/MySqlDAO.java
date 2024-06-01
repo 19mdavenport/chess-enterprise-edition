@@ -3,15 +3,16 @@ package dataaccess.mysql;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import dataaccess.DatabaseManager;
 
 import java.sql.*;
 
 public abstract class MySqlDAO {
-    private static boolean configured = false;
+    private static boolean databaseCreated = false;
+
     public MySqlDAO() throws DataAccessException {
         configureDatabase();
     }
+
     protected int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
@@ -19,18 +20,13 @@ public abstract class MySqlDAO {
                 ps.executeUpdate();
 
                 ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-
-                return 0;
+                return rs.next() ? rs.getInt(1) : 0;
             }
         } catch (SQLException e) {
             throw new DataAccessException(
                     String.format("unable to update database: %s, %s", statement, e.getMessage()));
         }
     }
-
 
     protected <T> T executeQuery(String statement, ResultSetParser<T> parser, Object... params)
             throws DataAccessException {
@@ -46,7 +42,6 @@ public abstract class MySqlDAO {
         }
     }
 
-
     private void addParams(PreparedStatement ps, Object[] params) throws SQLException, DataAccessException {
         for (int i = 0; i < params.length; i++) {
             Object param = params[i];
@@ -60,11 +55,10 @@ public abstract class MySqlDAO {
         }
     }
 
-
     protected void configureDatabase() throws DataAccessException {
-        if(!configured) {
+        if(!databaseCreated) {
             DatabaseManager.createDatabase();
-            configured = true;
+            databaseCreated = true;
         }
         try (Connection conn = DatabaseManager.getConnection()) {
             for (String statement : getCreateStatements()) {
@@ -78,7 +72,6 @@ public abstract class MySqlDAO {
     }
 
     protected abstract String[] getCreateStatements();
-
 
     @FunctionalInterface
     protected static interface ResultSetParser<T> {
