@@ -134,7 +134,9 @@ public class ChessBoard {
                 int secondInt = Integer.parseInt(String.valueOf(second));
                 int replace = firstInt + secondInt;
                 out.replace(i, i + 2, String.valueOf(replace));
-            } else i++;
+            } else {
+                i++;
+            }
         }
 
         return out.toString();
@@ -143,11 +145,13 @@ public class ChessBoard {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ChessBoard board = (ChessBoard) o;
-        return Arrays.deepEquals(this.board, board.board);
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        return Arrays.deepEquals(this.board, ((ChessBoard) o).board);
     }
 
 

@@ -58,13 +58,18 @@ public class CastlingRules implements ExtraRuleset {
             }
         } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
             ChessPosition startPos = move.getStartPosition();
-            if (castlingOptions[0] && startPos.getRow() == 1 && startPos.getColumn() == 8) castlingOptions[0] = false;
-
-            if (castlingOptions[1] && startPos.getRow() == 1 && startPos.getColumn() == 1) castlingOptions[1] = false;
-
-            if (castlingOptions[2] && startPos.getRow() == 8 && startPos.getColumn() == 8) castlingOptions[2] = false;
-
-            if (castlingOptions[3] && startPos.getRow() == 8 && startPos.getColumn() == 1) castlingOptions[3] = false;
+            if (castlingOptions[0] && startPos.getRow() == 1 && startPos.getColumn() == 8) {
+                castlingOptions[0] = false;
+            }
+            if (castlingOptions[1] && startPos.getRow() == 1 && startPos.getColumn() == 1) {
+                castlingOptions[1] = false;
+            }
+            if (castlingOptions[2] && startPos.getRow() == 8 && startPos.getColumn() == 8) {
+                castlingOptions[2] = false;
+            }
+            if (castlingOptions[3] && startPos.getRow() == 8 && startPos.getColumn() == 1) {
+                castlingOptions[3] = false;
+            }
         }
     }
 
@@ -92,11 +97,15 @@ public class CastlingRules implements ExtraRuleset {
 
         if (castlingOptions[offset]) {
             ChessMove kingSideCastle = singleCastlingMove(board, piece.getTeamColor(), true);
-            if (kingSideCastle != null) ret.add(kingSideCastle);
+            if (kingSideCastle != null) {
+                ret.add(kingSideCastle);
+            }
         }
         if (castlingOptions[offset + 1]) {
             ChessMove queenSideCastle = singleCastlingMove(board, piece.getTeamColor(), false);
-            if (queenSideCastle != null) ret.add(queenSideCastle);
+            if (queenSideCastle != null) {
+                ret.add(queenSideCastle);
+            }
         }
 
         return ret;
@@ -125,18 +134,24 @@ public class CastlingRules implements ExtraRuleset {
 
 
     private ChessMove singleCastlingMove(ChessBoard board, ChessGame.TeamColor color, boolean kingSide) {
-        if (ChessGame.isInCheck(color, board)) return null;
+        if (ChessGame.isInCheck(color, board)) {
+            return null;
+        }
 
         int row = (color == ChessGame.TeamColor.WHITE) ? 1 : 8;
         int col = (kingSide) ? 6 : 4;
 
         for (int i = col; i < 8 && i > 1; i += col - 5) {
-            if (board.getPiece(new ChessPosition(row, i)) != null) return null;
+            if (board.getPiece(new ChessPosition(row, i)) != null) {
+                return null;
+            }
         }
 
         ChessPosition orig = new ChessPosition(row, 5);
         ChessMove between = new ChessMove(orig, new ChessPosition(row, col));
-        if (host.isMoveInvalid(between, board)) return null;
+        if (host.isMoveInvalid(between, board)) {
+            return null;
+        }
 
         ChessMove out = new ChessMove(orig, new ChessPosition(row, 5 + 2 * (col - 5)));
         return (host.isMoveInvalid(out, board)) ? null : out;
@@ -151,8 +166,12 @@ public class CastlingRules implements ExtraRuleset {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         CastlingRules that = (CastlingRules) o;
 

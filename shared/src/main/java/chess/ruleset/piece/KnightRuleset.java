@@ -35,8 +35,9 @@ public class KnightRuleset implements PieceRuleset {
         while (iterator.hasNext()) {
             ChessMove move = iterator.next();
             ChessPiece movePiece = board.getPiece(move.getEndPosition());
-            if (movePiece != null && movePiece.getTeamColor() == board.getPiece(myPosition).getTeamColor())
+            if (movePiece != null && movePiece.getTeamColor() == board.getPiece(myPosition).getTeamColor()) {
                 iterator.remove();
+            }
         }
 
         return moves;

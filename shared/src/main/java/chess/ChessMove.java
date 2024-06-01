@@ -36,8 +36,9 @@ public class ChessMove {
      * @param promotionPiece Piece to promote to during the move
      */
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
-        if (promotionPiece == ChessPiece.PieceType.KING || promotionPiece == ChessPiece.PieceType.PAWN)
+        if (promotionPiece == ChessPiece.PieceType.KING || promotionPiece == ChessPiece.PieceType.PAWN) {
             throw new IllegalArgumentException("Invalid promotion piece");
+        }
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
@@ -82,14 +83,16 @@ public class ChessMove {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         ChessMove chessMove = (ChessMove) obj;
-
-        if (!Objects.equals(startPosition, chessMove.startPosition)) return false;
-        if (!Objects.equals(endPosition, chessMove.endPosition)) return false;
-        return promotionPiece == chessMove.promotionPiece;
+        return Objects.equals(startPosition, chessMove.startPosition) &&
+                Objects.equals(endPosition, chessMove.endPosition) &&
+                promotionPiece == chessMove.promotionPiece;
     }
 
 
@@ -100,13 +103,15 @@ public class ChessMove {
         ret.append(startPosition.toString());
         ret.append(endPosition.toString());
 
-        if (promotionPiece != null) ret.append(switch (promotionPiece) {
-            case QUEEN -> 'q';
-            case BISHOP -> 'b';
-            case KNIGHT -> 'n';
-            case ROOK -> 'r';
-            case KING, PAWN -> throw new IllegalStateException("Invalid promotion piece");
-        });
+        if (promotionPiece != null) {
+            ret.append(switch (promotionPiece) {
+                case QUEEN -> 'q';
+                case BISHOP -> 'b';
+                case KNIGHT -> 'n';
+                case ROOK -> 'r';
+                case KING, PAWN -> throw new IllegalStateException("Invalid promotion piece");
+            });
+        }
 
         return ret.toString();
     }

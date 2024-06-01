@@ -26,8 +26,9 @@ public abstract class LineMoveRuleset implements PieceRuleset {
             if (newPosPiece == null) {
                 moves.add(new ChessMove(myPosition, newPos));
             } else {
-                if (newPosPiece.getTeamColor() != board.getPiece(myPosition).getTeamColor())
+                if (newPosPiece.getTeamColor() != board.getPiece(myPosition).getTeamColor()) {
                     moves.add(new ChessMove(myPosition, newPos));
+                }
                 break;
             }
             try {

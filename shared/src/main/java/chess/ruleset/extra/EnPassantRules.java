@@ -20,9 +20,12 @@ public class EnPassantRules implements ExtraRuleset {
     public void moveMade(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getEndPosition());
         if (piece.getPieceType() == ChessPiece.PieceType.PAWN &&
-                Math.abs(move.getStartPosition().getRow() - move.getEndPosition().getRow()) == 2)
+                Math.abs(move.getStartPosition().getRow() - move.getEndPosition().getRow()) == 2) {
             enPassantPosition = move.getEndPosition();
-        else enPassantPosition = null;
+        }
+        else {
+            enPassantPosition = null;
+        }
     }
 
 
@@ -39,18 +42,19 @@ public class EnPassantRules implements ExtraRuleset {
     public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition position) {
         Collection<ChessMove> ret = new HashSet<>();
 
-        if (enPassantPosition == null) return ret;
+        if (enPassantPosition == null) {
+            return ret;
+        }
 
         ChessPiece piece = board.getPiece(position);
 
-        if (piece == null || piece.getPieceType() != ChessPiece.PieceType.PAWN) return ret;
+        if (piece == null || piece.getPieceType() != ChessPiece.PieceType.PAWN) {
+            return ret;
+        }
 
         if (enPassantPosition.getRow() == position.getRow() &&
                 Math.abs(enPassantPosition.getColumn() - position.getColumn()) == 1) {
-            int row = position.getRow();
-            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) row++;
-            else row--;
-
+            int row = position.getRow() + ((piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? 1 : -1);
             ret.add(new ChessMove(position, new ChessPosition(row, enPassantPosition.getColumn())));
         }
 
@@ -76,8 +80,12 @@ public class EnPassantRules implements ExtraRuleset {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         EnPassantRules that = (EnPassantRules) o;
 

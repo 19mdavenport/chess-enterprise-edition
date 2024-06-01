@@ -75,7 +75,9 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = board.getPiece(startPosition);
 
-        if (piece == null) return null;
+        if (piece == null) {
+            return null;
+        }
 
         //Get all possible moves for the piece
         Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
@@ -112,8 +114,12 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(move.getStartPosition());
 
         //If there is no piece at the starting location or if said piece is the wrong color, the move is invalid
-        if (piece == null) throw new InvalidMoveException("No piece at starting position");
-        else if (piece.getTeamColor() != teamTurn) throw new InvalidMoveException("Piece of wrong color for turn");
+        if (piece == null) {
+            throw new InvalidMoveException("No piece at starting position");
+        }
+        else if (piece.getTeamColor() != teamTurn) {
+            throw new InvalidMoveException("Piece of wrong color for turn");
+        }
         else {
             //If the piece can't actually make that move, it's invalid
             Collection<ChessMove> moves = validMoves(move.getStartPosition());
@@ -157,11 +163,15 @@ public class ChessGame {
             }
         }
 
-        if (king == null) return false;
+        if (king == null) {
+            return false;
+        }
 
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
-                if(positionThreatensKing(new ChessPosition(i, j), board, king, teamColor)) return true;
+                if(positionThreatensKing(new ChessPosition(i, j), board, king, teamColor)) {
+                    return true;
+                }
             }
         }
 
@@ -173,7 +183,9 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(position);
         if (piece != null && piece.getTeamColor() != teamColor) {
             for (ChessMove move : piece.pieceMoves(board, position)) {
-                if (move.getEndPosition().equals(kingPosition)) return true;
+                if (move.getEndPosition().equals(kingPosition)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -209,7 +221,9 @@ public class ChessGame {
                 ChessPosition pos = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(pos);
                 if (piece != null && piece.getTeamColor() == teamColor) {
-                    if (!validMoves(pos).isEmpty()) return false;
+                    if (!validMoves(pos).isEmpty()) {
+                        return false;
+                    }
                 }
             }
         }
@@ -244,7 +258,9 @@ public class ChessGame {
         ChessPiece piece = board.getPiece(move.getStartPosition());
 
         //If there is no piece at the starting location or if said piece is the wrong color, the move is invalid
-        if (piece == null) throw new InvalidMoveException("No piece at starting position");
+        if (piece == null) {
+            throw new InvalidMoveException("No piece at starting position");
+        }
 
         for (ExtraRuleset extraRuleset : extraRules) {
             if (extraRuleset.moveMatches(move, board)) {
@@ -258,12 +274,16 @@ public class ChessGame {
             board.addPiece(move.getStartPosition(), null);
             board.addPiece(move.getEndPosition(), piece);
         } else { //Promotions
-            if (piece.getPieceType() != ChessPiece.PieceType.PAWN)
+            if (piece.getPieceType() != ChessPiece.PieceType.PAWN) {
                 throw new InvalidMoveException("Move with promotion piece not on pawn");
+            }
             if ((piece.getTeamColor() == TeamColor.WHITE && move.getEndPosition().getRow() != 8) ||
-                    (piece.getTeamColor() == TeamColor.BLACK && move.getEndPosition().getRow() != 1))
+                    (piece.getTeamColor() == TeamColor.BLACK && move.getEndPosition().getRow() != 1)) {
                 throw new InvalidMoveException("Move with promotion piece doesn't end to correct end of ret");
-            if (board.getPiece(move.getEndPosition()) != null) board.addPiece(move.getEndPosition(), null);
+            }
+            if (board.getPiece(move.getEndPosition()) != null) {
+                board.addPiece(move.getEndPosition(), null);
+            }
 
             TeamColor color = board.getPiece(move.getStartPosition()).getTeamColor();
             board.addPiece(move.getStartPosition(), null);
@@ -290,13 +310,14 @@ public class ChessGame {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ChessGame chessGame = (ChessGame) o;
-
-        if (!Objects.equals(board, chessGame.board)) return false;
-        return teamTurn == chessGame.teamTurn;
+        return Objects.equals(board, chessGame.board) && teamTurn == chessGame.teamTurn;
     }
 
 
