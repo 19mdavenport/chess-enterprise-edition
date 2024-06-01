@@ -28,7 +28,9 @@ public class ChessServerExceptionHandler<T extends Exception> implements Excepti
 
     @Override
     public void handle(T t, Request request, Response response) {
-        if (t.getCause() != null) t.printStackTrace();
+        if (t.getCause() != null) {
+            t.printStackTrace();
+        }
         response.status(responseCode);
         response.body(new Gson().toJson(Map.of("message", t.getMessage())));
     }

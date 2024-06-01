@@ -22,7 +22,9 @@ public class GameService {
         try {
             authorization(authToken);
 
-            if (request.gameName() == null) throw new BadRequestException("Game name cannot be null");
+            if (request.gameName() == null) {
+                throw new BadRequestException("Game name cannot be null");
+            }
 
             GameData game = new GameData(0, null, null, request.gameName(), new ChessGame());
             game = dataAccess.getGameDAO().insertGame(game);
@@ -48,8 +50,12 @@ public class GameService {
     public synchronized void joinGame(JoinGameRequest request, String authToken) throws ChessServerException {
         try {
             GameData game = dataAccess.getGameDAO().findGame(request.gameID());
-            if (game == null) throw new BadRequestException("Error: Game not found");
-            if (request.playerColor() == null) throw new BadRequestException("Error: Not a valid color");
+            if (game == null) {
+                throw new BadRequestException("Error: Game not found");
+            }
+            if (request.playerColor() == null) {
+                throw new BadRequestException("Error: Not a valid color");
+            }
 
             AuthData auth = authorization(authToken);
 
@@ -77,7 +83,9 @@ public class GameService {
     private AuthData authorization(String authtoken) throws ChessServerException {
         try {
             AuthData auth = dataAccess.getAuthDAO().findAuth(authtoken);
-            if (auth == null) throw new UnauthorizedException("Error: Unauthorized");
+            if (auth == null) {
+                throw new UnauthorizedException("Error: Unauthorized");
+            }
             return auth;
         } catch (DataAccessException e) {
             throw new ChessServerException(e);

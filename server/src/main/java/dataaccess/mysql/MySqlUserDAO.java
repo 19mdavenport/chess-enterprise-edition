@@ -33,7 +33,9 @@ public class MySqlUserDAO extends MySqlDAO implements UserDAO {
     @Override
     public boolean verifyUser(UserData user) throws DataAccessException {
         return executeQuery("SELECT * FROM user WHERE username=?", (rs) -> {
-            if (!rs.next()) return false;
+            if (!rs.next()) {
+                return false;
+            }
             return BCrypt.checkpw(user.password(), rs.getString("password"));
         }, user.username());
     }

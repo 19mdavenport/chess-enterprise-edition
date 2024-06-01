@@ -22,7 +22,9 @@ public class MySqlGameDAO extends MySqlDAO implements GameDAO {
     @Override
     public GameData findGame(int gameID) throws DataAccessException {
         return executeQuery("SELECT * FROM game WHERE gameID = ?;", rs -> {
-            if (!rs.next()) return null;
+            if (!rs.next()) {
+                return null;
+            }
             return readGame(rs);
         }, gameID);
     }
@@ -31,7 +33,9 @@ public class MySqlGameDAO extends MySqlDAO implements GameDAO {
     public Collection<GameData> findAllGames() throws DataAccessException {
         return executeQuery("SELECT * FROM game;", rs -> {
             Collection<GameData> ret = new HashSet<>();
-            while (rs.next()) ret.add(readGame(rs));
+            while (rs.next()) {
+                ret.add(readGame(rs));
+            }
             return ret;
         });
     }

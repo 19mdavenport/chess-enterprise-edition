@@ -16,17 +16,23 @@ public class ConnectionManager {
     private final Map<Integer, Set<Session>> sessions = new ConcurrentHashMap<>();
 
     public void addSession(int gameId, Session session) {
-        if(!sessions.containsKey(gameId)) sessions.put(gameId, Collections.synchronizedSet(new HashSet<>()));
+        if(!sessions.containsKey(gameId)) {
+            sessions.put(gameId, Collections.synchronizedSet(new HashSet<>()));
+        }
         sessions.get(gameId).add(session);
     }
 
     public void removeSession(int gameId, Session session) {
-        if(sessions.containsKey(gameId)) sessions.get(gameId).remove(session);
+        if(sessions.containsKey(gameId)) {
+            sessions.get(gameId).remove(session);
+        }
     }
 
     public void broadcast(String message, int gameId, Session exclude) throws IOException {
         for (Session ses : sessions.get(gameId)) {
-            if (ses != exclude) sendMessage(ses, message);
+            if (ses != exclude) {
+                sendMessage(ses, message);
+            }
         }
     }
 

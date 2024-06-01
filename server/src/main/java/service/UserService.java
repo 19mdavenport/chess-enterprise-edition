@@ -57,7 +57,9 @@ public class UserService {
     public void logout(String authtoken) throws ChessServerException {
         try {
             AuthData delete = dataAccess.getAuthDAO().findAuth(authtoken);
-            if (delete == null) throw new UnauthorizedException("Error: Unauthorized");
+            if (delete == null) {
+                throw new UnauthorizedException("Error: Unauthorized");
+            }
             dataAccess.getAuthDAO().deleteAuth(authtoken);
         } catch (DataAccessException e) {
             throw new ChessServerException(e);

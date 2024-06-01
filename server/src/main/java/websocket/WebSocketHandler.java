@@ -64,10 +64,14 @@ public class WebSocketHandler {
             UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
 
             AuthData token = dataAccess.getAuthDAO().findAuth(command.getAuthString());
-            if (token == null) throw new WebsocketException("Error: Invalid authtoken");
+            if (token == null) {
+                throw new WebsocketException("Error: Invalid authtoken");
+            }
 
             GameData game = dataAccess.getGameDAO().findGame(command.getGameID());
-            if (game == null) throw new WebsocketException("Error: Invalid gameID");
+            if (game == null) {
+                throw new WebsocketException("Error: Invalid gameID");
+            }
 
             switch (command.getCommandType()) {
                 case CONNECT -> connect(session, token.username(), game);
@@ -98,9 +102,15 @@ public class WebSocketHandler {
         connectionManager.sendMessage(session, loadGameJson);
 
         String message = "User " + username + " is now ";
-        if (username.equals(game.whiteUsername())) message += "playing as white";
-        else if (username.equals(game.blackUsername())) message += "playing as black";
-        else message += "watching";
+        if (username.equals(game.whiteUsername())) {
+            message += "playing as white";
+        }
+        else if (username.equals(game.blackUsername())) {
+            message += "playing as black";
+        }
+        else {
+            message += "watching";
+        }
 
         ServerMessage notify = new NotificationMessage(message);
         String notifyJson = gson.toJson(notify);
@@ -132,9 +142,10 @@ public class WebSocketHandler {
 
     private void makeMove(Session session, MakeMoveCommand command, String username, GameData game)
             throws IOException, WebsocketException, DataAccessException {
-        if (command.getMove() == null) throw new WebsocketException("Error: Must include a move");
+        if (command.getMove() == null) {
+            throw new WebsocketException("Error: Must include a move");
+        }
         confirmGameStatus(game, username);
-
         if ((game.game().getTeamTurn() == ChessGame.TeamColor.WHITE && !Objects.equals(game.whiteUsername(), username)) ||
                 (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK &&
                         !Objects.equals(game.blackUsername(), username))) {
