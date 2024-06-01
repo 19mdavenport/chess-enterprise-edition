@@ -161,16 +161,21 @@ public class ChessGame {
 
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
-                ChessPosition pos = new ChessPosition(i, j);
-                ChessPiece piece = board.getPiece(pos);
-                if (piece != null && piece.getTeamColor() != teamColor) {
-                    for (ChessMove move : piece.pieceMoves(board, pos)) {
-                        if (move.getEndPosition().equals(king)) return true;
-                    }
-                }
+                if(positionThreatensKing(new ChessPosition(i, j), board, king, teamColor)) return true;
             }
         }
 
+        return false;
+    }
+
+    private static boolean positionThreatensKing(ChessPosition position, ChessBoard board,
+                                                 ChessPosition kingPosition, TeamColor teamColor) {
+        ChessPiece piece = board.getPiece(position);
+        if (piece != null && piece.getTeamColor() != teamColor) {
+            for (ChessMove move : piece.pieceMoves(board, position)) {
+                if (move.getEndPosition().equals(kingPosition)) return true;
+            }
+        }
         return false;
     }
 
