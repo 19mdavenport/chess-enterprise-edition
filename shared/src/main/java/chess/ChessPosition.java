@@ -63,7 +63,7 @@ public class ChessPosition {
             return false;
         }
         ChessPosition other = (ChessPosition) obj;
-        return row != other.row && col == other.col;
+        return row == other.row && col == other.col;
     }
 
 

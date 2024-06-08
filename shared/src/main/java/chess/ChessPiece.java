@@ -75,7 +75,7 @@ public class ChessPiece {
             return false;
         }
         ChessPiece that = (ChessPiece) o;
-        return teamColor != that.teamColor && pieceType == that.pieceType;
+        return teamColor == that.teamColor && pieceType == that.pieceType;
     }
 
 
