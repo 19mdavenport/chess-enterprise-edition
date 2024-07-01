@@ -96,7 +96,9 @@ function joinGame() {
 
 
 //Websocket
-let socket;
+/**
+ * If you named these variables differently in your Phase 0 code you can rename these here
+ */
 let lastMove = {
   startPosition: {
     row: 1,
@@ -108,7 +110,7 @@ let lastMove = {
   },
   promotionPiece: null,
 };
-let messages = 0;
+let socket;
 
 function socketOpen(event) {
   displayMessage('Websocket connection opened');
@@ -123,7 +125,7 @@ function socketMessage(event) {
 }
 
 function socketError(event) {
-  displayMessage("Error: " + event.reason);
+  displayMessage("Websocket error occurred"); //I couldn't read anything of note from the event
 }
 
 function socketClose(event) {
@@ -161,7 +163,6 @@ function closeWs() {
   document.getElementById('executeWebsocket').style.display = "none";
   const messageBox = document.getElementById("wsMessageBox");
   while(messageBox.childElementCount > 1) messageBox.removeChild(messageBox.lastChild);
-  messages = 0;
 }
 
 function displayCommand(commandType, extra) {
@@ -173,7 +174,6 @@ function displayCommand(commandType, extra) {
 
 function displayMessage(message) {
   const label = document.getElementById("wsMessageBoxLabel");
-  messages++;
   const preElement = document.createElement("pre");
   preElement.innerText = new Date().toLocaleTimeString() + "\n" + message;
   label.insertAdjacentElement("afterend", document.createElement("br"));
