@@ -1,8 +1,8 @@
 package web;
 
 import chess.ChessMove;
-import com.google.gson.Gson;
 import data.DataCache;
+import serialize.Serializer;
 import websocket.commands.*;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
@@ -20,8 +20,6 @@ public class WebSocketClient extends Endpoint implements MessageHandler.Whole<St
 
     private final Session session;
 
-    private final Gson gson = new Gson();
-
     public WebSocketClient(WebSocketClientObserver observer, String host, int port)
             throws URISyntaxException, DeploymentException, IOException {
         this.observer = observer;
@@ -36,11 +34,11 @@ public class WebSocketClient extends Endpoint implements MessageHandler.Whole<St
     @Override
     public void onMessage(String s) {
         try {
-            ServerMessage message = new Gson().fromJson(s, ServerMessage.class);
+            ServerMessage message = Serializer.deserialize(s, ServerMessage.class);
             switch (message.getServerMessageType()) {
-                case LOAD_GAME -> observer.loadGame(gson.fromJson(s, LoadGameMessage.class).getGame());
-                case NOTIFICATION -> observer.notify(gson.fromJson(s, NotificationMessage.class).getMessage());
-                case ERROR -> observer.error(gson.fromJson(s, ErrorMessage.class).getErrorMessage());
+                case LOAD_GAME -> observer.loadGame(Serializer.deserialize(s, LoadGameMessage.class).getGame());
+                case NOTIFICATION -> observer.notify(Serializer.deserialize(s, NotificationMessage.class).getMessage());
+                case ERROR -> observer.error(Serializer.deserialize(s, ErrorMessage.class).getErrorMessage());
             }
         } catch (Exception e) {
             observer.error(e.getMessage());
@@ -64,6 +62,6 @@ public class WebSocketClient extends Endpoint implements MessageHandler.Whole<St
     }
 
     private void sendMessage(UserGameCommand command) throws IOException {
-        session.getBasicRemote().sendText(gson.toJson(command));
+        session.getBasicRemote().sendText(Serializer.serialize(command));
     }
 }

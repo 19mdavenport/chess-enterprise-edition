@@ -1,6 +1,6 @@
 package handler;
 
-import com.google.gson.Gson;
+import serialize.Serializer;
 import spark.ExceptionHandler;
 import spark.Request;
 import spark.Response;
@@ -32,6 +32,6 @@ public class ChessServerExceptionHandler<T extends Exception> implements Excepti
             t.printStackTrace();
         }
         response.status(responseCode);
-        response.body(new Gson().toJson(Map.of("message", t.getMessage())));
+        response.body(Serializer.serialize(Map.of("message", t.getMessage())));
     }
 }

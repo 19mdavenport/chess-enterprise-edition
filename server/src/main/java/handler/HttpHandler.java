@@ -1,7 +1,7 @@
 package handler;
 
-import com.google.gson.Gson;
 import dataaccess.DataAccess;
+import serialize.Serializer;
 import service.ChessServerException;
 import spark.Request;
 import spark.Response;
@@ -20,20 +20,19 @@ public abstract class HttpHandler<T> implements Route {
 
     @Override
     public Object handle(Request request, Response response) throws ChessServerException {
-        Gson gson = new Gson();
         String authToken = request.headers("Authorization");
 
         T requestObject = null;
         Class<T> requestClass = getRequestClass();
         if(requestClass != null) {
-            requestObject = gson.fromJson(request.body(), requestClass);
+            requestObject = Serializer.deserialize(request.body(), requestClass);
         }
 
         Object result = getServiceResult(dataAccess, requestObject, authToken);
 
         response.status(HttpURLConnection.HTTP_OK);
 
-        return gson.toJson(result);
+        return Serializer.serialize(result);
     }
 
     protected abstract Class<T> getRequestClass();

@@ -7,7 +7,7 @@ import chess.InvalidMoveException;
 
 import java.util.Collection;
 
-public interface ExtraRuleset {
+public interface ExtraRuleset extends Cloneable {
     void setBoard(ChessBoard board);
 
     void moveMade(ChessMove move, ChessBoard board);
@@ -17,4 +17,6 @@ public interface ExtraRuleset {
     Collection<ChessMove> validMoves(ChessBoard board, ChessPosition position);
 
     void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException;
+
+    Object clone() throws CloneNotSupportedException;
 }

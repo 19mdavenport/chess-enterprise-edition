@@ -1,8 +1,8 @@
 package dataaccess.mysql;
 
 import chess.ChessGame;
-import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import serialize.Serializer;
 
 import java.sql.*;
 
@@ -48,7 +48,7 @@ public abstract class MySqlDAO {
             switch (param) {
                 case String p -> ps.setString(i + 1, p);
                 case Integer p -> ps.setInt(i + 1, p);
-                case ChessGame p -> ps.setString(i + 1, new Gson().toJson(p));
+                case ChessGame p -> ps.setString(i + 1, Serializer.serialize(p));
                 case null -> ps.setNull(i + 1, Types.NULL);
                 default -> throw new DataAccessException("Unexpected data type: " + param.getClass());
             }

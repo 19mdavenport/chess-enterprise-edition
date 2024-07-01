@@ -104,4 +104,8 @@ public class EnPassantRules implements ExtraRuleset {
         return enPassantPosition != null ? enPassantPosition.toString() : "";
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

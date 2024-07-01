@@ -1,11 +1,11 @@
 package websocket;
 
-import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
+import serialize.Serializer;
 import websocket.messages.ErrorMessage;
-import websocket.messages.ServerMessage;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,7 +13,31 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
+    private static final ByteBuffer PING_BUFFER = ByteBuffer.wrap("PING".getBytes());
+
     private final Map<Integer, Set<Session>> sessions = new ConcurrentHashMap<>();
+
+    public ConnectionManager() {
+        new Thread(() -> {
+            try {
+                while (true) {
+                    Thread.sleep(10000);
+                    pingClients();
+                }
+            } catch (InterruptedException | IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }).start();
+    }
+
+    private void pingClients() throws IOException {
+        for (Set<Session> set : sessions.values()) {
+            for (Session session : set) {
+                session.getRemote().sendPing(PING_BUFFER);
+            }
+        }
+    }
 
     public void addSession(int gameId, Session session) {
         if(!sessions.containsKey(gameId)) {
@@ -37,7 +61,7 @@ public class ConnectionManager {
     }
 
     public void sendError(Session session, String message) throws IOException {
-        sendMessage(session, new Gson().toJson(new ErrorMessage(message)));
+        sendMessage(session, Serializer.serialize(new ErrorMessage(message)));
     }
 
     public void sendMessage(Session session, String message) throws IOException {
@@ -47,6 +71,6 @@ public class ConnectionManager {
     }
 
     public void clear() {
-        sessions.clear();
+//        sessions.clear();
     }
 }

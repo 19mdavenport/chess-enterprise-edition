@@ -1,8 +1,8 @@
 package web;
 
-import com.google.gson.Gson;
 import data.DataCache;
 import model.*;
+import serialize.Serializer;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -80,7 +80,6 @@ public class ServerFacade {
     private <T> T execute(String apiEndpoint, String requestMethod, Object request,
                           Class<T> responseClass) {
         try {
-            Gson gson = new Gson();
             boolean requestPresent = request != null;
 
             URL url = new URI(this.url + apiEndpoint).toURL();
@@ -100,7 +99,7 @@ public class ServerFacade {
 
             if (requestPresent) {
                 OutputStream reqBody = http.getOutputStream();
-                writeString(gson.toJson(request), reqBody);
+                writeString(Serializer.serialize(request), reqBody);
                 reqBody.close();
             }
 
@@ -111,7 +110,7 @@ public class ServerFacade {
 
             String resp = readString(http.getInputStream());
             if(responseClass != null) {
-                return gson.fromJson(resp, responseClass);
+                return Serializer.deserialize(resp, responseClass);
             }
             return null;
         } catch (IOException | URISyntaxException e) {

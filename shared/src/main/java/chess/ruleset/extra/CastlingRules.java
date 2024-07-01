@@ -8,14 +8,11 @@ import java.util.HashSet;
 
 public class CastlingRules implements ExtraRuleset {
 
-    private final boolean[] castlingOptions;
-    private final ChessGame host;
+    private boolean[] castlingOptions;
 
-
-    public CastlingRules(ChessGame host) {
+    public CastlingRules() {
         castlingOptions = new boolean[4];
         Arrays.fill(castlingOptions, true);
-        this.host = host;
     }
 
 
@@ -148,13 +145,22 @@ public class CastlingRules implements ExtraRuleset {
         }
 
         ChessPosition orig = new ChessPosition(row, 5);
-        ChessMove between = new ChessMove(orig, new ChessPosition(row, col));
-        if (host.isMoveInvalid(between, board)) {
+        ChessBoard betweenBoard = new ChessBoard(board);
+        betweenBoard.addPiece(new ChessPosition(row, col), betweenBoard.getPiece(orig));
+        betweenBoard.addPiece(orig, null);
+        if (ChessGame.isInCheck(color, betweenBoard)) {
             return null;
         }
 
-        ChessMove out = new ChessMove(orig, new ChessPosition(row, 5 + 2 * (col - 5)));
-        return (host.isMoveInvalid(out, board)) ? null : out;
+        ChessPosition end = new ChessPosition(row, 5 + 2 * (col - 5));
+        ChessMove out = new ChessMove(orig, end);
+        ChessBoard outBoard = new ChessBoard(board);
+        try {
+            performMove(out, outBoard);
+        } catch (InvalidMoveException e) {
+            return null;
+        }
+        return (ChessGame.isInCheck(color, outBoard)) ? null : out;
     }
 
 
@@ -183,6 +189,13 @@ public class CastlingRules implements ExtraRuleset {
     public String toString() {
         return String.valueOf((castlingOptions[0]) ? 'K' : '-') + ((castlingOptions[1]) ? 'Q' : '-') +
                 ((castlingOptions[2]) ? 'k' : '-') + ((castlingOptions[3]) ? 'q' : '-');
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        CastlingRules clone = (CastlingRules) super.clone();
+        clone.castlingOptions = Arrays.copyOf(castlingOptions, castlingOptions.length);
+        return clone;
     }
 
 }

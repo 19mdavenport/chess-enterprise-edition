@@ -1,10 +1,10 @@
 package dataaccess.mysql;
 
 import chess.ChessGame;
-import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import model.GameData;
+import serialize.Serializer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,6 +70,6 @@ public class MySqlGameDAO extends MySqlDAO implements GameDAO {
 
     private GameData readGame(ResultSet rs) throws SQLException {
         return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"),
-                rs.getString("gameName"), new Gson().fromJson(rs.getString("game"), ChessGame.class));
+                rs.getString("gameName"), Serializer.deserialize(rs.getString("game"), ChessGame.class));
     }
 }

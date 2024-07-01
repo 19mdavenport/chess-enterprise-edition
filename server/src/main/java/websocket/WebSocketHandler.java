@@ -2,7 +2,6 @@ package websocket;
 
 import chess.ChessGame;
 import chess.InvalidMoveException;
-import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
@@ -14,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import serialize.Serializer;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.LoadGameMessage;
@@ -29,8 +29,6 @@ public class WebSocketHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
 
     private final ConnectionManager connectionManager = new ConnectionManager();
-
-    private final Gson gson = new Gson();
 
     private static final WebSocketHandler INSTANCE = new WebSocketHandler();
 
@@ -61,7 +59,7 @@ public class WebSocketHandler {
     public void message(Session session, String message) throws IOException {
         try {
             LOGGER.debug("Received from {}: {}", session.getRemoteAddress(), message);
-            UserGameCommand command = gson.fromJson(message, UserGameCommand.class);
+            UserGameCommand command = Serializer.deserialize(message, UserGameCommand.class);
 
             AuthData token = dataAccess.getAuthDAO().findAuth(command.getAuthString());
             if (token == null) {
@@ -76,7 +74,7 @@ public class WebSocketHandler {
             switch (command.getCommandType()) {
                 case CONNECT -> connect(session, token.username(), game);
                 case MAKE_MOVE ->
-                        makeMove(session, gson.fromJson(message, MakeMoveCommand.class), token.username(), game);
+                        makeMove(session, Serializer.deserialize(message, MakeMoveCommand.class), token.username(), game);
                 case LEAVE -> leave(session, token.username(), game);
                 case RESIGN -> resign(session, token.username(), game);
             }
@@ -98,7 +96,7 @@ public class WebSocketHandler {
         connectionManager.addSession(game.gameID(), session);
 
         ServerMessage loadGame = new LoadGameMessage(game.game());
-        String loadGameJson = gson.toJson(loadGame);
+        String loadGameJson = Serializer.serialize(loadGame);
         connectionManager.sendMessage(session, loadGameJson);
 
         String message = "User " + username + " is now ";
@@ -113,7 +111,7 @@ public class WebSocketHandler {
         }
 
         ServerMessage notify = new NotificationMessage(message);
-        String notifyJson = gson.toJson(notify);
+        String notifyJson = Serializer.serialize(notify);
 
         connectionManager.broadcast(notifyJson, game.gameID(), session);
     }
@@ -134,7 +132,7 @@ public class WebSocketHandler {
         connectionManager.removeSession(game.gameID(), session);
 
         ServerMessage notify = new NotificationMessage("User " + username + " is no longer " + description);
-        String notifyJson = gson.toJson(notify);
+        String notifyJson = Serializer.serialize(notify);
 
         connectionManager.broadcast(notifyJson, game.gameID(), session);
     }
@@ -162,8 +160,8 @@ public class WebSocketHandler {
         ServerMessage loadGame = new LoadGameMessage(game.game());
         ServerMessage notify = new NotificationMessage(username + " makes move " + command.getMove());
 
-        String loadGameJson = gson.toJson(loadGame);
-        String notifyJson = gson.toJson(notify);
+        String loadGameJson = Serializer.serialize(loadGame);
+        String notifyJson = Serializer.serialize(notify);
 
         connectionManager.broadcast(loadGameJson, game.gameID(), null);
         connectionManager.broadcast(notifyJson, game.gameID(), session);
@@ -186,7 +184,7 @@ public class WebSocketHandler {
         }
         if (extra != null) {
             notify = new NotificationMessage(extra);
-            notifyJson = gson.toJson(notify);
+            notifyJson = Serializer.serialize(notify);
             connectionManager.broadcast(notifyJson, game.gameID(), null);
             dataAccess.getGameDAO().updateGame(game);
         }
@@ -204,12 +202,12 @@ public class WebSocketHandler {
                 (Objects.equals(username, game.whiteUsername())) ? game.blackUsername() : game.whiteUsername();
         ServerMessage notify = new NotificationMessage(
                 username + " has resigned." + ((opponent != null) ? " " + opponent + " wins!" : ""));
-        String notifyJson = gson.toJson(notify);
+        String notifyJson = Serializer.serialize(notify);
         connectionManager.broadcast(notifyJson, game.gameID(), session);
 
 
         notify = new NotificationMessage("You have resigned.");
-        notifyJson = gson.toJson(notify);
+        notifyJson = Serializer.serialize(notify);
         connectionManager.sendMessage(session, notifyJson);
     }
 

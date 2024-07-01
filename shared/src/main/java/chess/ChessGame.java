@@ -4,9 +4,7 @@ import chess.ruleset.extra.CastlingRules;
 import chess.ruleset.extra.EnPassantRules;
 import chess.ruleset.extra.ExtraRuleset;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -22,7 +20,7 @@ public class ChessGame {
 
     boolean active;
 
-    private transient final List<ExtraRuleset> extraRules = List.of(new CastlingRules(this), new EnPassantRules());
+    private List<ExtraRuleset> extraRules;
 
 
     public ChessGame() {
@@ -31,8 +29,22 @@ public class ChessGame {
 
         board.resetBoard();
         active = true;
+        extraRules = List.of(new CastlingRules(), new EnPassantRules());
     }
 
+    public ChessGame(ChessGame copy) {
+        this.board = new ChessBoard(copy.board);
+        this.teamTurn = copy.teamTurn;
+        this.active = copy.active;
+        this.extraRules = new ArrayList<>(copy.extraRules.size());
+        for(int i = 0; i < extraRules.size(); i++) {
+            try {
+                extraRules.set(i, (ExtraRuleset) extraRules.get(i).clone());
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     /**
      * @return Which team's turn it is
