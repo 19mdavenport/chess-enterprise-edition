@@ -136,7 +136,7 @@ public class MainUserInterface implements UserInterface {
             try {
                 color = ChessGame.TeamColor.valueOf(args[1].toUpperCase());
             } catch (IllegalArgumentException e) {
-                return new CommandOutput("Unable to parse " + args[1] + " as a color", false);
+                return new CommandOutput(String.format("Unable to parse %s as a color", args[1]), false);
             }
         }
 
@@ -144,7 +144,7 @@ public class MainUserInterface implements UserInterface {
         try {
             gameNum = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            return new CommandOutput("Unable to parse " + args[0] + " as a game number", false);
+            return new CommandOutput(String.format("Unable to parse %s as a game number", args[0]), false);
         }
         if(games == null) {
             retreiveGames();

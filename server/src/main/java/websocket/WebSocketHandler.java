@@ -99,18 +99,18 @@ public class WebSocketHandler {
         String loadGameJson = Serializer.serialize(loadGame);
         connectionManager.sendMessage(session, loadGameJson);
 
-        String message = "User " + username + " is now ";
+        StringBuilder messageBuilder = new StringBuilder().append("User ").append(username).append(" is now ");
         if (username.equals(game.whiteUsername())) {
-            message += "playing as white";
+            messageBuilder.append("playing as white");
         }
         else if (username.equals(game.blackUsername())) {
-            message += "playing as black";
+            messageBuilder.append("playing as black");
         }
         else {
-            message += "watching";
+            messageBuilder.append("watching");
         }
 
-        ServerMessage notify = new NotificationMessage(message);
+        ServerMessage notify = new NotificationMessage(messageBuilder.toString());
         String notifyJson = Serializer.serialize(notify);
 
         connectionManager.broadcast(notifyJson, game.gameID(), session);
@@ -131,7 +131,7 @@ public class WebSocketHandler {
 
         connectionManager.removeSession(game.gameID(), session);
 
-        ServerMessage notify = new NotificationMessage("User " + username + " is no longer " + description);
+        ServerMessage notify = new NotificationMessage(String.format("User %s is no longer %s", username, description));
         String notifyJson = Serializer.serialize(notify);
 
         connectionManager.broadcast(notifyJson, game.gameID(), session);
@@ -158,7 +158,7 @@ public class WebSocketHandler {
         }
 
         ServerMessage loadGame = new LoadGameMessage(game.game());
-        ServerMessage notify = new NotificationMessage(username + " makes move " + command.getMove());
+        ServerMessage notify = new NotificationMessage(String.format("%s makes move %s", username, command.getMove()));
 
         String loadGameJson = Serializer.serialize(loadGame);
         String notifyJson = Serializer.serialize(notify);
@@ -174,7 +174,7 @@ public class WebSocketHandler {
         ServerMessage notify;
         String extra = null;
         if (game.game().isInCheckmate(game.game().getTeamTurn())) {
-            extra = "Checkmate. " + username + " wins!";
+            extra = String.format("Checkmate. %s wins!", username);
             game.game().setActive(false);
         } else if (game.game().isInStalemate(game.game().getTeamTurn())) {
             extra = "The game ends in a stalemate";
@@ -198,10 +198,12 @@ public class WebSocketHandler {
         game.game().setActive(false);
         dataAccess.getGameDAO().updateGame(game);
 
-        String opponent =
-                (Objects.equals(username, game.whiteUsername())) ? game.blackUsername() : game.whiteUsername();
-        ServerMessage notify = new NotificationMessage(
-                username + " has resigned." + ((opponent != null) ? " " + opponent + " wins!" : ""));
+        String opponent = (Objects.equals(username, game.whiteUsername())) ? game.blackUsername() : game.whiteUsername();
+        StringBuilder messageBuilder = new StringBuilder(username).append(" has resigned.");
+        if(opponent != null) {
+            messageBuilder.append(" ").append(opponent).append(" wins!");
+        }
+        ServerMessage notify = new NotificationMessage(messageBuilder.toString());
         String notifyJson = Serializer.serialize(notify);
         connectionManager.broadcast(notifyJson, game.gameID(), session);
 

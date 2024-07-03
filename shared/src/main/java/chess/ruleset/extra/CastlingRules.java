@@ -187,8 +187,12 @@ public class CastlingRules implements ExtraRuleset {
 
     @Override
     public String toString() {
-        return String.valueOf((castlingOptions[0]) ? 'K' : '-') + ((castlingOptions[1]) ? 'Q' : '-') +
-                ((castlingOptions[2]) ? 'k' : '-') + ((castlingOptions[3]) ? 'q' : '-');
+        return new StringBuilder()
+                .append((castlingOptions[0] ? 'K' : '-'))
+                .append((castlingOptions[1]) ? 'Q' : '-')
+                .append((castlingOptions[2]) ? 'k' : '-')
+                .append((castlingOptions[3]) ? 'q' : '-')
+                .toString();
     }
 
     @Override

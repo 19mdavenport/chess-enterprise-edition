@@ -316,7 +316,7 @@ public class ChessGame {
 
     @Override
     public String toString() {
-        return board.toString() + ' ' + ((teamTurn == TeamColor.WHITE) ? 'w' : 'b');
+        return String.format("%s %s", board.toString(), (teamTurn == TeamColor.WHITE) ? 'w' : 'b');
     }
 
 

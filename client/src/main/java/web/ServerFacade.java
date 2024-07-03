@@ -105,7 +105,7 @@ public class ServerFacade {
 
 
             if (!(http.getResponseCode() / 100 == 2)) {
-                throw new ResponseException("Response was " + http.getResponseCode() + " " + http.getResponseMessage());
+                throw new ResponseException(String.format("Response was %d %s", http.getResponseCode(), http.getResponseMessage()));
             }
 
             String resp = readString(http.getInputStream());

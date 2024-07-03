@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Repl implements WebSocketClientObserver {
 
     public void run() {
-        System.out.println(EscapeSequences.BLACK_QUEEN + "Welcome to Chess. Sign in to start." + EscapeSequences.BLACK_QUEEN);
+        System.out.printf("%sWelcome to Chess. Sign in to start.%s%n", EscapeSequences.BLACK_QUEEN, EscapeSequences.BLACK_QUEEN);
         System.out.print(DataCache.getInstance().getUi().help());
 
         Scanner scanner = new Scanner(System.in);
@@ -27,9 +27,9 @@ public class Repl implements WebSocketClientObserver {
 
             try {
                 result = DataCache.getInstance().getUi().eval(cmd, params);
-                System.out.print(
-                        (result.success() ? EscapeSequences.SET_TEXT_COLOR_BLUE : EscapeSequences.SET_TEXT_COLOR_RED) +
-                                result.output() + EscapeSequences.RESET_TEXT_COLOR);
+                System.out.printf("%s%s%s",
+                        result.success() ? EscapeSequences.SET_TEXT_COLOR_BLUE : EscapeSequences.SET_TEXT_COLOR_RED,
+                        result.output(), EscapeSequences.RESET_TEXT_COLOR);
             } catch (Throwable e) {
                 System.out.print(e.getMessage());
             }
@@ -38,8 +38,8 @@ public class Repl implements WebSocketClientObserver {
     }
 
     private void printPrompt() {
-        System.out.print("\n" + EscapeSequences.SET_TEXT_COLOR_WHITE + EscapeSequences.SET_TEXT_ITALIC +
-                DataCache.getInstance().getUi().getPromptText() + " >>> " + EscapeSequences.SET_TEXT_COLOR_GREEN +
+        System.out.printf("\n%s%s%s >>> %s%s", EscapeSequences.SET_TEXT_COLOR_WHITE, EscapeSequences.SET_TEXT_ITALIC,
+                DataCache.getInstance().getUi().getPromptText(), EscapeSequences.SET_TEXT_COLOR_GREEN,
                 EscapeSequences.RESET_TEXT_ITALIC);
     }
 
@@ -55,13 +55,13 @@ public class Repl implements WebSocketClientObserver {
 
     @Override
     public void notify(String message) {
-        System.out.println(EscapeSequences.SET_TEXT_COLOR_MAGENTA + message+ EscapeSequences.RESET_TEXT_COLOR);
+        System.out.printf("%s%s%s%n", EscapeSequences.SET_TEXT_COLOR_MAGENTA, message, EscapeSequences.RESET_TEXT_COLOR);
         printPrompt();
     }
 
     @Override
     public void error(String message) {
-        System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + message + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.printf("%s%s%s%n", EscapeSequences.SET_TEXT_COLOR_RED, message, EscapeSequences.RESET_TEXT_COLOR);
         printPrompt();
     }
 

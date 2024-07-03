@@ -23,7 +23,7 @@ public class WebSocketClient extends Endpoint implements MessageHandler.Whole<St
     public WebSocketClient(WebSocketClientObserver observer, String host, int port)
             throws URISyntaxException, DeploymentException, IOException {
         this.observer = observer;
-        URI uri = new URI("ws://" + host + ':' + port + "/ws");
+        URI uri = new URI(String.format("ws://%s:%d/ws", host, port));
         session = ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
         session.addMessageHandler(this);
     }

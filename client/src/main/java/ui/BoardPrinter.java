@@ -42,7 +42,7 @@ public class BoardPrinter {
 
             System.out.print(colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BORDER_TEXT));
             System.out.print(colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BORDER));
-            System.out.print(" " + row + ' ');
+            System.out.printf(" %d ", row);
 
             for (int j = 1; j <= 8; j++) {
                 int col = (perspective == ChessGame.TeamColor.BLACK) ? 9 - j : j;
@@ -87,7 +87,7 @@ public class BoardPrinter {
 
             System.out.print(colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BORDER_TEXT));
             System.out.print(colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BORDER));
-            System.out.print(" " + row + ' ');
+            System.out.printf(" %d ", row);
             System.out.print(EscapeSequences.RESET_BG_COLOR);
             System.out.print(EscapeSequences.RESET_TEXT_COLOR);
             System.out.println();
@@ -106,11 +106,11 @@ public class BoardPrinter {
 
         if (perspective == ChessGame.TeamColor.BLACK) {
             for (char c = 'h'; c >= 'a'; c--) {
-                System.out.print("\u2003" + c + ' ');
+                System.out.printf("\u2003%s ", c);
             }
         } else {
             for (char c = 'a'; c <= 'h'; c++) {
-                System.out.print("\u2003" + c + ' ');
+                System.out.printf("\u2003%s ", c);
             }
         }
 

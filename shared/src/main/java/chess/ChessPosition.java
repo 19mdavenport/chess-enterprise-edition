@@ -21,7 +21,7 @@ public class ChessPosition {
      */
     public ChessPosition(int row, int col) {
         if (row < 1 || col < 1 || row > 8 || col > 8) {
-            throw new IllegalArgumentException(row + ", " + col + " is not on the board");
+            throw new IllegalArgumentException(String.format("%d, %d is not on the board", row, col));
         }
         this.row = row;
         this.col = col;
@@ -69,7 +69,7 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "" + (char) (col + 96) + row;
+        return String.format("%s%d", (char) (col + 96), row);
     }
 
 }
