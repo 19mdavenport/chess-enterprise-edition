@@ -48,8 +48,8 @@ public class WebSocketHandler {
 
     @OnWebSocketError
     public void error(Throwable error) {
-        if (!((error instanceof EofException) ||
-                error.getCause() != null && error.getCause().getMessage().contains("Connection reset by peer"))) {
+        if (!((error instanceof EofException) || error.getCause() != null && error.getCause().getMessage() != null &&
+                error.getCause().getMessage().contains("Connection reset by peer"))) {
             LOGGER.warn("WebSocket error: ", error);
         }
     }
@@ -73,8 +73,7 @@ public class WebSocketHandler {
 
             switch (command.getCommandType()) {
                 case CONNECT -> connect(session, token.username(), game);
-                case MAKE_MOVE ->
-                        makeMove(session, Serializer.deserialize(message, MakeMoveCommand.class), token.username(), game);
+                case MAKE_MOVE -> makeMove(session, (MakeMoveCommand) command, token.username(), game);
                 case LEAVE -> leave(session, token.username(), game);
                 case RESIGN -> resign(session, token.username(), game);
             }

@@ -5,6 +5,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -16,6 +17,7 @@ public class Serializer {
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(ExtraRuleset.class, new ExtraRulesetAdapter());
+        gsonBuilder.registerTypeAdapter(UserGameCommand.class, new UserGameCommandDeserializer());
         GSON = gsonBuilder.create();
     }
 
