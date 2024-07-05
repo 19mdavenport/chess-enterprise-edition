@@ -46,7 +46,9 @@ public class WebSocketClient extends Endpoint implements MessageHandler.Whole<St
     }
 
     public void connect() throws IOException {
-        sendMessage(new ConnectCommand(DataCache.getInstance().getAuthToken(), DataCache.getInstance().getGameId()));
+        sendMessage(new UserGameCommand(UserGameCommand.CommandType.CONNECT,
+                DataCache.getInstance().getAuthToken(),
+                DataCache.getInstance().getGameId()));
     }
 
     public void makeMove(ChessMove move) throws IOException {
@@ -54,11 +56,15 @@ public class WebSocketClient extends Endpoint implements MessageHandler.Whole<St
     }
 
     public void leave() throws IOException {
-        sendMessage(new LeaveCommand(DataCache.getInstance().getAuthToken(), DataCache.getInstance().getGameId()));
+        sendMessage(new UserGameCommand(UserGameCommand.CommandType.LEAVE,
+                DataCache.getInstance().getAuthToken(),
+                DataCache.getInstance().getGameId()));
     }
 
     public void resign() throws IOException {
-        sendMessage(new ResignCommand(DataCache.getInstance().getAuthToken(), DataCache.getInstance().getGameId()));
+        sendMessage(new UserGameCommand(UserGameCommand.CommandType.RESIGN,
+                DataCache.getInstance().getAuthToken(),
+                DataCache.getInstance().getGameId()));
     }
 
     private void sendMessage(UserGameCommand command) throws IOException {
