@@ -36,9 +36,9 @@ public class WebSocketClient extends Endpoint implements MessageHandler.Whole<St
         try {
             ServerMessage message = Serializer.deserialize(s, ServerMessage.class);
             switch (message.getServerMessageType()) {
-                case LOAD_GAME -> observer.loadGame(Serializer.deserialize(s, LoadGameMessage.class).getGame());
-                case NOTIFICATION -> observer.notify(Serializer.deserialize(s, NotificationMessage.class).getMessage());
-                case ERROR -> observer.error(Serializer.deserialize(s, ErrorMessage.class).getErrorMessage());
+                case LOAD_GAME -> observer.loadGame(((LoadGameMessage) message).getGame());
+                case NOTIFICATION -> observer.notify(((NotificationMessage) message).getMessage());
+                case ERROR -> observer.error(((ErrorMessage) message).getErrorMessage());
             }
         } catch (Exception e) {
             observer.error(e.getMessage());
