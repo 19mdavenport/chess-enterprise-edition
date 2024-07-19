@@ -4,6 +4,7 @@ import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
 
@@ -22,11 +23,14 @@ public class UserService {
             }
 
 
-            if (dataAccess.getUserDAO().usernameExists(user.username())) {
+            if (dataAccess.getUserDAO().getUser(user.username()) != null) {
                 throw new RequestItemTakenException("Error: username taken");
             }
 
-            dataAccess.getUserDAO().insertUser(user);
+            String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+            UserData hashedPasswordUser = new UserData(user.username(), hashedPassword, user.email());
+
+            dataAccess.getUserDAO().insertUser(hashedPasswordUser);
 
             AuthData auth = AuthData.getNewAuthData(user.username());
             dataAccess.getAuthDAO().insertAuth(auth);
@@ -40,7 +44,8 @@ public class UserService {
 
     public AuthData login(UserData user) throws ChessServerException {
         try {
-            if (!dataAccess.getUserDAO().verifyUser(user)) {
+            UserData foundUser = dataAccess.getUserDAO().getUser(user.username());
+            if (foundUser == null || !BCrypt.checkpw(user.password(), foundUser.password())) {
                 throw new UnauthorizedException("Error: Incorrect username or password");
             }
 

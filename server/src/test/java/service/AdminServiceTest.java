@@ -38,7 +38,7 @@ public class AdminServiceTest {
         Assertions.assertDoesNotThrow(() -> new AdminService(dataAccess).clear());
 
 
-        Assertions.assertFalse(dataAccess.getUserDAO().usernameExists(user.username()));
+        Assertions.assertNull(dataAccess.getUserDAO().getUser(user.username()));
         Assertions.assertNull(dataAccess.getGameDAO().findGame(game.gameID()));
         Assertions.assertNull(dataAccess.getAuthDAO().findAuth(token.authToken()));
     }

@@ -31,14 +31,14 @@ public class UserDAOTests {
         userDAO.insertUser(userOne);
         userDAO.insertUser(userTwo);
         userDAO.clear();
-        Assertions.assertFalse(userDAO.usernameExists(userOne.username()));
-        Assertions.assertFalse(userDAO.usernameExists(userTwo.username()));
+        Assertions.assertNull(userDAO.getUser(userOne.username()));
+        Assertions.assertNull(userDAO.getUser(userTwo.username()));
     }
 
     @Test
     public void insertPass() throws DataAccessException {
         userDAO.insertUser(userOne);
-        Assertions.assertTrue(userDAO.verifyUser(userOne));
+        Assertions.assertNotNull(userDAO.getUser(userOne.username()));
     }
 
     @Test
@@ -48,24 +48,13 @@ public class UserDAOTests {
     }
 
     @Test
-    public void usernameExistsPass() throws DataAccessException {
+    public void getUserPass() throws DataAccessException {
         userDAO.insertUser(userOne);
-        Assertions.assertTrue(userDAO.usernameExists(userOne.username()));
+        Assertions.assertEquals(userOne, userDAO.getUser(userOne.username()));
     }
 
     @Test
-    public void usernameExistsFail() throws DataAccessException {
-        Assertions.assertFalse(userDAO.usernameExists("testUsername2"));
-    }
-
-    @Test
-    public void verifyUserPass() throws DataAccessException {
-        userDAO.insertUser(userOne);
-        Assertions.assertTrue(userDAO.verifyUser(userOne));
-    }
-
-    @Test
-    public void verifyUserFail() throws DataAccessException {
-        Assertions.assertFalse(userDAO.verifyUser(userOne));
+    public void getUserFail() throws DataAccessException {
+        Assertions.assertNull(userDAO.getUser("testUsername2"));
     }
 }

@@ -20,14 +20,5 @@ public interface UserDAO {
     void insertUser(UserData user) throws DataAccessException;
 
 
-    /**
-     * Returns the User matching the provided username
-     *
-     * @param username The username of the User to look for
-     * @return The requested User, or {@code null} if it couldn't be found
-     * @throws DataAccessException A DataAccessException is thrown if data cannot be accessed for any reason
-     */
-    boolean usernameExists(String username) throws DataAccessException;
-
-    boolean verifyUser(UserData user) throws DataAccessException;
+    UserData getUser(String username) throws DataAccessException;
 }

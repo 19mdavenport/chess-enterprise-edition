@@ -18,26 +18,17 @@ public class MySqlUserDAO extends MySqlDAO implements UserDAO {
 
     @Override
     public void insertUser(UserData user) throws DataAccessException {
-        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         String statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?);";
-        executeUpdate(statement, user.username(), hashedPassword, user.email());
+        executeUpdate(statement, user.username(), user.password(), user.email());
     }
 
-
     @Override
-    public boolean usernameExists(String username) throws DataAccessException {
-        return executeQuery("SELECT * FROM user WHERE username=?", ResultSet::next, username);
-    }
-
-
-    @Override
-    public boolean verifyUser(UserData user) throws DataAccessException {
+    public UserData getUser(String username) throws DataAccessException {
         return executeQuery("SELECT * FROM user WHERE username=?", (rs) -> {
-            if (!rs.next()) {
-                return false;
-            }
-            return BCrypt.checkpw(user.password(), rs.getString("password"));
-        }, user.username());
+            return rs.next() ?
+                    new UserData(rs.getString("username"), rs.getString("password"), rs.getString("email")) :
+                    null;
+        }, username);
     }
 
     @Override

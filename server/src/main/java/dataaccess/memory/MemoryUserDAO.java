@@ -25,13 +25,7 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public boolean usernameExists(String username) throws DataAccessException {
-        return users.get(username) != null;
-    }
-
-    @Override
-    public boolean verifyUser(UserData user) throws DataAccessException {
-        UserData fromDatabase = users.get(user.username());
-        return fromDatabase != null && Objects.equals(user.password(), fromDatabase.password());
+    public UserData getUser(String username) throws DataAccessException {
+        return users.get(username);
     }
 }
