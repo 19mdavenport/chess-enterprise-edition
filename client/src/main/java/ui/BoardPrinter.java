@@ -21,7 +21,7 @@ public class BoardPrinter {
     }
 
     public static void printGame(ChessGame game, ChessPosition highlight) {
-        printGame(game, highlight, new HashSet<>());
+        printGame(game, highlight, Set.of(highlight));
     }
 
     private static void printGame(ChessGame game, ChessPosition position, Collection<ChessPosition> differences) {

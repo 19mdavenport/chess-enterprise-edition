@@ -37,7 +37,7 @@ public class DataCache {
 
     private State state;
 
-    private ChessBoardColorScheme colorScheme = ChessBoardColorScheme.COLOR_SCHEMES[0];
+    private ChessBoardColorScheme colorScheme = ChessBoardColorScheme.COLOR_SCHEMES.getFirst();
 
     private ChessGame lastGame;
 

@@ -35,7 +35,7 @@ public class GameUserInterface implements UserInterface {
                 Highlight legal moves: "hl", "highlight" <position> (e.g. f5)
                 Make a move: "m", "move", "make" <source> <destination> <optional promotion>(e.g. f5 e4 q)
                 Redraw Chess Board: "res", "resign"
-                Change color scheme: "c", "colors" <color number>
+                Change color scheme: "c", "colors" <color number> (enter no number to enter color scheme creator)
                 Resign from game: "resign"
                 Leave game: "leave"
                 """;
@@ -123,18 +123,19 @@ public class GameUserInterface implements UserInterface {
 
     private CommandOutput colors(String[] args) {
         if (args.length != 1) {
-            return new CommandOutput("colors <color number>", false);
+            new ColorSchemeCreator().createColorScheme();
+            return new CommandOutput("", true);
         }
         try {
             int newColor = Integer.parseInt(args[0]);
             if(newColor < 1) {
                 return new CommandOutput("color number cannot be less than 1", false);
             }
-            int max = ChessBoardColorScheme.COLOR_SCHEMES.length;
+            int max = ChessBoardColorScheme.COLOR_SCHEMES.size();
             if(newColor > max) {
                 return new CommandOutput("color number cannot be greater than %d".formatted(max), false);
             }
-            DataCache.getInstance().setColorScheme(ChessBoardColorScheme.COLOR_SCHEMES[newColor - 1]);
+            DataCache.getInstance().setColorScheme(ChessBoardColorScheme.COLOR_SCHEMES.get(newColor - 1));
             return new CommandOutput("Color scheme set to scheme %d".formatted(newColor), true);
         } catch (NumberFormatException e) {
             return new CommandOutput("could not parse %s as a number".formatted(args[0]), false);

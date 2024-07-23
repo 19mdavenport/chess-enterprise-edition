@@ -1,6 +1,8 @@
 package ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ChessBoardColorScheme {
 
@@ -9,12 +11,13 @@ public class ChessBoardColorScheme {
         WHITE_PIECE, BLACK_PIECE
     }
 
-    public static final ChessBoardColorScheme[] COLOR_SCHEMES =
-            {new ChessBoardColorScheme(37, 0.46f, 0.6f, 0.12f, 0.39f, 0.495f, 0.88f, 0.12f),
+    public static final List<ChessBoardColorScheme> COLOR_SCHEMES =
+            new ArrayList(List.of(
+                    new ChessBoardColorScheme(37, 0.46f, 0.6f, 0.12f, 0.39f, 0.495f, 0.88f, 0.12f),
                     new ChessBoardColorScheme(208, 0.56f, 0.52f, 0.15f, 0.43f, 0.55f, 0.88f, 0.14f),
                     new ChessBoardColorScheme(265, 0.6f, 0.5f, 0.15f, 0.55f, 0.64f, 0.88f, 0.12f),
                     new ChessBoardColorScheme(300, 0.5f, 0.54f, 0.15f, 0.43f, 0.57f, 0.9f, 0.11f),
-                    new ChessBoardColorScheme(0, 0.52f, 0.5f, 0.15f, 0.41f, 0.54f, 0.9f, 0.11f)};
+                    new ChessBoardColorScheme(0, 0.52f, 0.5f, 0.15f, 0.41f, 0.54f, 0.9f, 0.11f)));
 
     private final float blackPiece;
 
@@ -33,7 +36,7 @@ public class ChessBoardColorScheme {
     private final float whitePiece;
 
 
-    private ChessBoardColorScheme(float hue, float saturation, float border, float borderText, float darkSquare,
+    public ChessBoardColorScheme(float hue, float saturation, float border, float borderText, float darkSquare,
                                   float lightSquare, float whitePiece, float blackPiece) {
         this.hue = hue;
         this.saturation = saturation;
