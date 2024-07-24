@@ -182,15 +182,15 @@ public class EnPassantTests {
     @DisplayName("Can Only En Passant on Next Turn")
     public void missedEnPassant() throws InvalidMoveException {
         ChessBoard board = loadBoard("""
+                      | | | | | | | | |
+                | | |p| | | | | |
+                | | | | | | | |P|
+                | |P| | | | | | |
                 | | | | | | | | |
-		        | | |p| | | | | |
-		        | | | | | | | |P|
-		        | |P| | | | | | |
-		        | | | | | | | | |
-		        | | | | | | | |p|
-		        | | | | | | | | |
-		        | | | | | | | | |
-                """);
+                | | | | | | | |p|
+                | | | | | | | | |
+                | | | | | | | | |
+                      """);
         ChessGame game = new ChessGame();
         game.setBoard(board);
         game.setTeamTurn(ChessGame.TeamColor.BLACK);
@@ -229,8 +229,8 @@ public class EnPassantTests {
                 "ChessGame validMoves contained a En Passant move after the move became invalid");
     }
 
-    private void assertValidEnPassant(ChessBoard board, ChessGame.TeamColor turn, ChessMove setupMove,
-                                      ChessMove enPassantMove, ChessBoard endBoard) throws InvalidMoveException {
+    private void assertValidEnPassant(ChessBoard board, ChessGame.TeamColor turn, ChessMove setupMove, ChessMove enPassantMove, ChessBoard endBoard)
+            throws InvalidMoveException {
         ChessGame game = new ChessGame();
         game.setBoard(board);
         game.setTeamTurn(turn);

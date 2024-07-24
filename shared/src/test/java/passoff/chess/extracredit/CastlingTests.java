@@ -39,10 +39,8 @@ public class CastlingTests {
         ChessMove queenSide = new ChessMove(kingPosition, new ChessPosition(1, 3), null);
         ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(1, 7), null);
 
-        Assertions.assertTrue(game.validMoves(kingPosition).contains(queenSide),
-                "ChessGame validMoves did not contain valid queen-side castle move");
-        Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide),
-                "ChessGame validMoves did not contain valid king-side castle move");
+        Assertions.assertTrue(game.validMoves(kingPosition).contains(queenSide), "ChessGame validMoves did not contain valid queen-side castle move");
+        Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide), "ChessGame validMoves did not contain valid king-side castle move");
 
         //queen side castle works correctly
         Assertions.assertDoesNotThrow(() -> game.makeMove(queenSide));
@@ -108,10 +106,8 @@ public class CastlingTests {
         ChessMove queenSide = new ChessMove(kingPosition, new ChessPosition(8, 3), null);
         ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(8, 7), null);
 
-        Assertions.assertTrue(game.validMoves(kingPosition).contains(queenSide),
-                "ChessGame validMoves did not contain valid queen-side castle move");
-        Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide),
-                "ChessGame validMoves did not contain valid king-side castle move");
+        Assertions.assertTrue(game.validMoves(kingPosition).contains(queenSide), "ChessGame validMoves did not contain valid queen-side castle move");
+        Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide), "ChessGame validMoves did not contain valid king-side castle move");
 
         //queen side castle works correctly
         Assertions.assertDoesNotThrow(() -> game.makeMove(queenSide));
@@ -179,10 +175,8 @@ public class CastlingTests {
         ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(1, 7), null);
 
         //make sure king cannot castle
-        Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide),
-                "ChessGame validMoves contained an invalid castling move");
-        Assertions.assertFalse(game.validMoves(kingPosition).contains(kingSide),
-                "ChessGame validMoves contained an invalid castling move");
+        Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide), "ChessGame validMoves contained an invalid castling move");
+        Assertions.assertFalse(game.validMoves(kingPosition).contains(kingSide), "ChessGame validMoves contained an invalid castling move");
     }
 
 
@@ -206,10 +200,8 @@ public class CastlingTests {
         ChessPosition kingPosition = new ChessPosition(8, 5);
         ChessMove queenSide = new ChessMove(kingPosition, new ChessPosition(8, 3), null);
         ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(8, 7), null);
-        Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide),
-                "ChessGame validMoves contained an invalid castling move");
-        Assertions.assertFalse(game.validMoves(kingPosition).contains(kingSide),
-                "ChessGame validMoves contained an invalid castling move");
+        Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide), "ChessGame validMoves contained an invalid castling move");
+        Assertions.assertFalse(game.validMoves(kingPosition).contains(kingSide), "ChessGame validMoves contained an invalid castling move");
     }
 
 
@@ -252,10 +244,8 @@ public class CastlingTests {
         ChessMove kingSide = new ChessMove(kingPosition, new ChessPosition(1, 7), null);
 
         //make sure king can't castle towards moved rook, but still can to unmoved rook
-        Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide),
-                "ChessGame validMoves contained an invalid castling move");
-        Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide),
-                "ChessGame validMoves did not contain valid king-side castle move");
+        Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide), "ChessGame validMoves contained an invalid castling move");
+        Assertions.assertTrue(game.validMoves(kingPosition).contains(kingSide), "ChessGame validMoves did not contain valid king-side castle move");
 
         //move king
         game.makeMove(new ChessMove(new ChessPosition(6, 1), new ChessPosition(5, 1), null));
@@ -286,10 +276,8 @@ public class CastlingTests {
          */
 
         //make sure king can't castle anymore
-        Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide),
-                "ChessGame validMoves contained an invalid castling move");
-        Assertions.assertFalse(game.validMoves(kingPosition).contains(kingSide),
-                "ChessGame validMoves contained an invalid castling move");
+        Assertions.assertFalse(game.validMoves(kingPosition).contains(queenSide), "ChessGame validMoves contained an invalid castling move");
+        Assertions.assertFalse(game.validMoves(kingPosition).contains(kingSide), "ChessGame validMoves contained an invalid castling move");
     }
 
 }
