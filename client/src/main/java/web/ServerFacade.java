@@ -82,20 +82,7 @@ public class ServerFacade {
         try {
             boolean requestPresent = request != null;
 
-            URL url = new URI(this.url + apiEndpoint).toURL();
-
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-            http.setRequestMethod(requestMethod.toUpperCase(Locale.ROOT));
-            http.setDoOutput(requestPresent);
-            http.addRequestProperty("Accept", "application/json");
-
-            String authtoken = DataCache.getInstance().getAuthToken();
-            if (authtoken != null) {
-                http.addRequestProperty("Authorization", authtoken);
-            }
-
-
-            http.connect();
+            HttpURLConnection http = makeConnection(apiEndpoint, requestMethod, requestPresent);
 
             if (requestPresent) {
                 OutputStream reqBody = http.getOutputStream();
@@ -103,19 +90,33 @@ public class ServerFacade {
                 reqBody.close();
             }
 
-
-            if (!(http.getResponseCode() / 100 == 2)) {
+            if (http.getResponseCode() / 100 != 2) {
                 throw new ResponseException(String.format("Response was %d %s", http.getResponseCode(), http.getResponseMessage()));
             }
 
             String resp = readString(http.getInputStream());
-            if(responseClass != null) {
-                return Serializer.deserialize(resp, responseClass);
-            }
-            return null;
+            return responseClass != null ? Serializer.deserialize(resp, responseClass) : null;
         } catch (IOException | URISyntaxException e) {
             throw new ResponseException("Error connecting to server", e);
         }
+    }
+
+    private HttpURLConnection makeConnection(String apiEndpoint, String requestMethod, boolean requestPresent)
+            throws URISyntaxException, IOException {
+        URL url = new URI(this.url + apiEndpoint).toURL();
+
+        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+        http.setRequestMethod(requestMethod.toUpperCase(Locale.ROOT));
+        http.setDoOutput(requestPresent);
+        http.addRequestProperty("Accept", "application/json");
+
+        String authtoken = DataCache.getInstance().getAuthToken();
+        if (authtoken != null) {
+            http.addRequestProperty("Authorization", authtoken);
+        }
+
+        http.connect();
+        return http;
     }
 
 
