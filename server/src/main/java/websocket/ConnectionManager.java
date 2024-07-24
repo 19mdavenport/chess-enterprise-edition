@@ -71,6 +71,6 @@ public class ConnectionManager {
     }
 
     public void clear() {
-//        sessions.clear();
+        sessions.clear();
     }
 }
