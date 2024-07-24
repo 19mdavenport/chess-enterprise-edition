@@ -24,7 +24,7 @@ public class AdminServiceTest {
 
 
     @Test
-    public void clearPass() throws ChessServerException, DataAccessException {
+    public void clearPass() throws DataAccessException {
 
         UserData user = new UserData("sheila", "superSecurePa$$w0rd", "noreply@byu.edu");
         GameData game = new GameData(113, user.username(), "otherPlayer", "Really Cool Name", new ChessGame());
