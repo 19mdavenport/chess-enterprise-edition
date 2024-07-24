@@ -1,5 +1,7 @@
 package handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import serialize.Serializer;
 import spark.ExceptionHandler;
 import spark.Request;
@@ -15,6 +17,8 @@ import java.util.Map;
  */
 public class ChessServerExceptionHandler<T extends Exception> implements ExceptionHandler<T> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChessServerExceptionHandler.class);
+
     private final int responseCode;
 
 
@@ -28,9 +32,7 @@ public class ChessServerExceptionHandler<T extends Exception> implements Excepti
 
     @Override
     public void handle(T t, Request request, Response response) {
-        if (t.getCause() != null) {
-            t.printStackTrace();
-        }
+        LOGGER.debug("Exception in {} {}", request.requestMethod(), request.pathInfo(), t);
         response.status(responseCode);
         response.body(Serializer.serialize(Map.of("message", t.getMessage())));
     }

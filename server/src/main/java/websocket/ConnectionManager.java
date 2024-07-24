@@ -25,7 +25,6 @@ public class ConnectionManager {
                     pingClients();
                 }
             } catch (InterruptedException | IOException e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }).start();
