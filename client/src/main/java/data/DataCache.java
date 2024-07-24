@@ -43,51 +43,35 @@ public class DataCache {
 
     private WebSocketClient webSocketClient;
 
-
     public void setRunOptions(String host, int port, WebSocketClientObserver observer)
             throws DeploymentException, URISyntaxException, IOException {
         facade = new ServerFacade("http://%s:%d".formatted(host, port));
         webSocketClient = new WebSocketClient(observer, host, port);
     }
 
-
     public String getServerUrl() {
         return serverUrl;
     }
-
 
     public String getAuthToken() {
         return authToken;
     }
 
-
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-
-
-    public String getUsername() {
-        return username;
-    }
-
 
     public ServerFacade getFacade() {
         return facade;
     }
 
-
-
-
     public UserInterface getUi() {
         return userInterface;
     }
 
-
-
     public State getState() {
         return state;
     }
-
 
     public void setState(State state) {
         this.state = state;
@@ -98,11 +82,9 @@ public class DataCache {
         };
     }
 
-
     public int getGameId() {
         return gameId;
     }
-
 
     public void setGameId(int gameId) {
         this.gameId = gameId;
