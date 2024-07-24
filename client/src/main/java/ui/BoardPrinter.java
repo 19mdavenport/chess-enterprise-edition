@@ -49,21 +49,9 @@ public class BoardPrinter {
 
                 ChessPosition pos = new ChessPosition(row, col);
 
-                boolean lightSquare = (pos.getRow() + pos.getColumn()) % 2 == 1;
+                ChessBoardColorScheme.ColorType backgroundType = getBackgroundType(pos, highlight, differences);
 
-                ChessBoardColorScheme.ColorType type = (lightSquare) ? ChessBoardColorScheme.ColorType.LIGHT_SQUARE :
-                        ChessBoardColorScheme.ColorType.DARK_SQUARE;
-
-
-                if (highlight.contains(pos)) {
-                    type = (lightSquare) ? ChessBoardColorScheme.ColorType.HIGHLIGHT_MOVES_LIGHT :
-                                    ChessBoardColorScheme.ColorType.HIGHLIGHT_MOVES_DARK;
-                }
-                else if (differences.contains(pos)) {
-                    type = ChessBoardColorScheme.ColorType.MOVE_MADE;
-                }
-
-                System.out.print(colorScheme.getColorEscapeSequence(type));
+                System.out.print(colorScheme.getColorEscapeSequence(backgroundType));
 
                 ChessPiece piece = game.getBoard().getPiece(pos);
                 if (piece == null) {
@@ -74,14 +62,14 @@ public class BoardPrinter {
                         case WHITE -> colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.WHITE_PIECE);
                         case BLACK -> colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BLACK_PIECE);
                     });
-                    switch (piece.getPieceType()) {
-                        case KING -> System.out.print(EscapeSequences.BLACK_KING);
-                        case QUEEN -> System.out.print(EscapeSequences.BLACK_QUEEN);
-                        case BISHOP -> System.out.print(EscapeSequences.BLACK_BISHOP);
-                        case KNIGHT -> System.out.print(EscapeSequences.BLACK_KNIGHT);
-                        case ROOK -> System.out.print(EscapeSequences.BLACK_ROOK);
-                        case PAWN -> System.out.print(EscapeSequences.BLACK_PAWN);
-                    }
+                    System.out.print(switch (piece.getPieceType()) {
+                        case KING -> EscapeSequences.BLACK_KING;
+                        case QUEEN -> EscapeSequences.BLACK_QUEEN;
+                        case BISHOP -> EscapeSequences.BLACK_BISHOP;
+                        case KNIGHT -> EscapeSequences.BLACK_KNIGHT;
+                        case ROOK -> EscapeSequences.BLACK_ROOK;
+                        case PAWN -> EscapeSequences.BLACK_PAWN;
+                    });
                 }
             }
 
@@ -96,6 +84,24 @@ public class BoardPrinter {
 
         printHeader(colorScheme, perspective);
         System.out.println();
+    }
+
+    private static ChessBoardColorScheme.ColorType getBackgroundType(ChessPosition pos,
+                                                                     Collection<ChessPosition> highlight,
+                                                                     Collection<ChessPosition> differences) {
+        boolean lightSquare = (pos.getRow() + pos.getColumn()) % 2 == 1;
+
+        if (highlight.contains(pos)) {
+            return (lightSquare) ? ChessBoardColorScheme.ColorType.HIGHLIGHT_MOVES_LIGHT :
+                    ChessBoardColorScheme.ColorType.HIGHLIGHT_MOVES_DARK;
+        }
+        else if (differences.contains(pos)) {
+            return ChessBoardColorScheme.ColorType.MOVE_MADE;
+        }
+        else {
+            return (lightSquare) ? ChessBoardColorScheme.ColorType.LIGHT_SQUARE :
+                    ChessBoardColorScheme.ColorType.DARK_SQUARE;
+        }
     }
 
 
