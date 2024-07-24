@@ -2,14 +2,13 @@ package server;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
-import dataaccess.memory.MemoryDataAccess;
 import dataaccess.mysql.MySqlDataAccess;
 import handler.*;
 import service.BadRequestException;
 import service.ChessServerException;
 import service.RequestItemTakenException;
 import service.UnauthorizedException;
-import spark.*;
+import spark.Spark;
 import websocket.WebSocketHandler;
 
 import java.net.HttpURLConnection;

@@ -4,7 +4,10 @@ import chess.ruleset.extra.CastlingRules;
 import chess.ruleset.extra.EnPassantRules;
 import chess.ruleset.extra.ExtraRuleset;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board

@@ -3,10 +3,8 @@ package ui;
 import chess.ChessGame;
 import data.DataCache;
 import web.WebSocketClientObserver;
-import websocket.messages.ServerMessage;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Scanner;
 
 public class Repl implements WebSocketClientObserver {

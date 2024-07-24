@@ -3,9 +3,6 @@ package dataaccess.mysql;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.UserData;
-import org.mindrot.jbcrypt.BCrypt;
-
-import java.sql.ResultSet;
 
 public class MySqlUserDAO extends MySqlDAO implements UserDAO {
     public MySqlUserDAO() throws DataAccessException {

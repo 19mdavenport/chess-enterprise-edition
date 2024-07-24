@@ -1,15 +1,10 @@
 package serialize;
 
 import chess.ruleset.extra.ExtraRuleset;
-import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
 
 public class Serializer {
 
