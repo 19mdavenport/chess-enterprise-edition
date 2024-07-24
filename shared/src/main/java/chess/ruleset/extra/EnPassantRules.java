@@ -105,7 +105,7 @@ public class EnPassantRules implements ExtraRuleset {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public EnPassantRules clone() throws CloneNotSupportedException {
+        return (EnPassantRules) super.clone();
     }
 }

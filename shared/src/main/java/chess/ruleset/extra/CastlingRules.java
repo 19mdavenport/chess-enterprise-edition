@@ -196,7 +196,7 @@ public class CastlingRules implements ExtraRuleset {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public CastlingRules clone() throws CloneNotSupportedException {
         CastlingRules clone = (CastlingRules) super.clone();
         clone.castlingOptions = Arrays.copyOf(castlingOptions, castlingOptions.length);
         return clone;

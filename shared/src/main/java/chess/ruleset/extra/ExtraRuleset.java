@@ -18,5 +18,5 @@ public interface ExtraRuleset extends Cloneable {
 
     void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException;
 
-    Object clone() throws CloneNotSupportedException;
+    ExtraRuleset clone() throws CloneNotSupportedException;
 }

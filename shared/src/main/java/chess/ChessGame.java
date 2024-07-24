@@ -40,9 +40,9 @@ public class ChessGame {
         this.teamTurn = copy.teamTurn;
         this.active = copy.active;
         this.extraRules = new ArrayList<>(copy.extraRules.size());
-        for(int i = 0; i < extraRules.size(); i++) {
+        for(int i = 0; i < copy.extraRules.size(); i++) {
             try {
-                extraRules.set(i, (ExtraRuleset) extraRules.get(i).clone());
+                extraRules.set(i, copy.extraRules.get(i).clone());
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
