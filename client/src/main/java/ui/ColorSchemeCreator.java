@@ -22,8 +22,8 @@ public class ColorSchemeCreator {
         float borderText = getFloat("border text lightness", 0f, 1f, 0.1f, 0.2f);
         float darkSquare = getFloat("dark square lightness", 0f, 0.6f, 0.35f, 0.55f);
         float lightSquare = getFloat("light square lightness", darkSquare, 1f, 0.5f, 0.7f);
-        float whitePiece = getFloat("white piece lightness", 0.7f, 1f, 0.85f, 0.95f);
-        float blackPiece = getFloat("black piece lightness", 0f, 0.3f, 0.05f, 0.15f);
+        float whitePiece = getFloat("white piece lightness", 0.75f, 1f, 0.85f, 0.95f);
+        float blackPiece = getFloat("black piece lightness", 0f, 0.25f, 0.05f, 0.15f);
 
         ChessBoardColorScheme created = new ChessBoardColorScheme(
                 hue, saturation, border, borderText, darkSquare, lightSquare, whitePiece, blackPiece);

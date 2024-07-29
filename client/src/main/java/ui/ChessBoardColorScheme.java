@@ -17,7 +17,8 @@ public class ChessBoardColorScheme {
                     new ChessBoardColorScheme(208, 0.56f, 0.52f, 0.15f, 0.43f, 0.55f, 0.88f, 0.14f),
                     new ChessBoardColorScheme(265, 0.6f, 0.5f, 0.15f, 0.55f, 0.64f, 0.88f, 0.12f),
                     new ChessBoardColorScheme(300, 0.5f, 0.54f, 0.15f, 0.43f, 0.57f, 0.9f, 0.11f),
-                    new ChessBoardColorScheme(0, 0.52f, 0.5f, 0.15f, 0.41f, 0.54f, 0.9f, 0.11f)));
+                    new ChessBoardColorScheme(0, 0.52f, 0.5f, 0.15f, 0.41f, 0.54f, 0.9f, 0.11f),
+                    new ChessBoardColorScheme(6, 0.5f, 0.68f, 0.28f, 0.58f, 0.72f, 0.92f, 0.15f)));
 
     private final float blackPiece;
 
