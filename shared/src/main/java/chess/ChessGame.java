@@ -42,7 +42,7 @@ public class ChessGame {
         this.extraRules = new ArrayList<>(copy.extraRules.size());
         for(int i = 0; i < copy.extraRules.size(); i++) {
             try {
-                extraRules.set(i, copy.extraRules.get(i).clone());
+                extraRules.add(i, copy.extraRules.get(i).clone());
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
