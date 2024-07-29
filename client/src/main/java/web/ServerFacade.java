@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Map;
 
 public class ServerFacade {
 
@@ -90,9 +91,7 @@ public class ServerFacade {
                 reqBody.close();
             }
 
-            if (http.getResponseCode() / 100 != 2) {
-                throw new ResponseException(String.format("Response was %d %s", http.getResponseCode(), http.getResponseMessage()));
-            }
+            throwIfNotSuccessful(http);
 
             String resp = readString(http.getInputStream());
             return responseClass != null ? Serializer.deserialize(resp, responseClass) : null;
@@ -117,6 +116,18 @@ public class ServerFacade {
 
         http.connect();
         return http;
+    }
+
+    private void throwIfNotSuccessful(HttpURLConnection http) throws IOException {
+        if (http.getResponseCode() / 100 != 2) {
+            String resp = readString(http.getErrorStream());
+            Map<String, String> map = Serializer.deserialize(resp, Map.class);
+            String message = map.get("message");
+            if(message == null) {
+                message = String.format("Response was %d %s", http.getResponseCode(), http.getResponseMessage());
+            }
+            throw new ResponseException(message);
+        }
     }
 
 
