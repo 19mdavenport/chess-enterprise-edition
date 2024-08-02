@@ -52,6 +52,17 @@ public class ConnectionManager {
         sessions.get(gameId).add(session);
     }
 
+    public void removeSession(Session session) {
+        if(sessions.get(0).contains(session)) {
+            sessions.get(0).remove(session);
+        }
+        else {
+            for (Set<Session> set : sessions.values()) {
+                set.remove(session);
+            }
+        }
+    }
+
     public void removeSession(int gameId, Session session) {
         if(sessions.containsKey(gameId)) {
             sessions.get(gameId).remove(session);
@@ -79,5 +90,12 @@ public class ConnectionManager {
 
     public void clear() {
         sessions.clear();
+        for (Set<Session> set : sessions.values()) {
+            for (Session session : set) {
+                if(session.isOpen()) {
+                    session.close();
+                }
+            }
+        }
     }
 }
