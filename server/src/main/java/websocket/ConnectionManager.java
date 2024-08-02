@@ -33,15 +33,22 @@ public class ConnectionManager {
     private void pingClients() throws IOException {
         for (Set<Session> set : sessions.values()) {
             for (Session session : set) {
-                session.getRemote().sendPing(PING_BUFFER);
+                if(session.isOpen()) {
+                    session.getRemote().sendPing(PING_BUFFER);
+                }
             }
         }
+    }
+
+    public void addSession(Session session) {
+        addSession(0, session);
     }
 
     public void addSession(int gameId, Session session) {
         if(!sessions.containsKey(gameId)) {
             sessions.put(gameId, Collections.synchronizedSet(new HashSet<>()));
         }
+        sessions.get(0).remove(session);
         sessions.get(gameId).add(session);
     }
 
@@ -49,6 +56,7 @@ public class ConnectionManager {
         if(sessions.containsKey(gameId)) {
             sessions.get(gameId).remove(session);
         }
+        sessions.get(0).add(session);
     }
 
     public void broadcast(String message, int gameId, Session exclude) throws IOException {
