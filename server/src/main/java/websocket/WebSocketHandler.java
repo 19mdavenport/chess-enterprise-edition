@@ -70,12 +70,12 @@ public class WebSocketHandler {
 
             AuthData token = dataAccess.getAuthDAO().findAuth(command.getAuthString());
             if (token == null) {
-                throw new WebsocketException("Error: Invalid authtoken");
+                throw new WebsocketException("Invalid authtoken");
             }
 
             GameData game = dataAccess.getGameDAO().findGame(command.getGameID());
             if (game == null) {
-                throw new WebsocketException("Error: Invalid gameID");
+                throw new WebsocketException("Invalid gameID");
             }
 
             switch (command.getCommandType()) {
@@ -88,7 +88,7 @@ public class WebSocketHandler {
             LOGGER.warn("DataAccessException: ", e);
             sendError(session, "Error: Unknown server error occurred: " + e.getMessage(), message);
         } catch (WebsocketException e) {
-            sendError(session, e.getMessage(), message);
+            sendError(session, "Error: " + e.getMessage(), message);
         }
     }
 
@@ -105,39 +105,25 @@ public class WebSocketHandler {
         String loadGameJson = Serializer.serialize(loadGame);
         connectionManager.sendMessage(session, loadGameJson);
 
-        StringBuilder messageBuilder = new StringBuilder().append("User ").append(username).append(" is now ");
-        if (username.equals(game.whiteUsername())) {
-            messageBuilder.append("playing as white");
-        }
-        else if (username.equals(game.blackUsername())) {
-            messageBuilder.append("playing as black");
-        }
-        else {
-            messageBuilder.append("watching");
-        }
-
-        ServerMessage notify = new NotificationMessage(messageBuilder.toString());
+        String message = String.format("User %s is now %s.", username, positionInGame(username, game));
+        ServerMessage notify = new NotificationMessage(message);
         String notifyJson = Serializer.serialize(notify);
-
         connectionManager.broadcast(notifyJson, game.gameID(), session);
     }
 
 
     private void leave(Session session, String username, GameData game) throws IOException, DataAccessException {
-        String description = "watching";
         if (username.equals(game.whiteUsername())) {
             game = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
-            description = "playing as white";
             dataAccess.getGameDAO().updateGame(game);
         } else if (username.equals(game.blackUsername())) {
             game = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
-            description = "playing as black";
             dataAccess.getGameDAO().updateGame(game);
         }
 
         connectionManager.removeSession(game.gameID(), session);
-
-        ServerMessage notify = new NotificationMessage(String.format("User %s is no longer %s", username, description));
+        String message = String.format("User %s is no longer %s", username, positionInGame(username, game));
+        ServerMessage notify = new NotificationMessage(message);
         String notifyJson = Serializer.serialize(notify);
 
         connectionManager.broadcast(notifyJson, game.gameID(), session);
@@ -147,20 +133,20 @@ public class WebSocketHandler {
     private void makeMove(Session session, MakeMoveCommand command, String username, GameData game)
             throws IOException, WebsocketException, DataAccessException {
         if (command.getMove() == null) {
-            throw new WebsocketException("Error: Must include a move");
+            throw new WebsocketException("Must include a move");
         }
         confirmGameStatus(game, username);
         if ((game.game().getTeamTurn() == ChessGame.TeamColor.WHITE && !Objects.equals(game.whiteUsername(), username)) ||
                 (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK &&
                         !Objects.equals(game.blackUsername(), username))) {
-            throw new WebsocketException("Error: It's not your turn");
+            throw new WebsocketException("It's not your turn");
         }
 
         try {
             game.game().makeMove(command.getMove());
             dataAccess.getGameDAO().updateGame(game);
         } catch (InvalidMoveException e) {
-            throw new WebsocketException("Error: That's not a valid move: " + e.getMessage());
+            throw new WebsocketException("That's not a valid move: " + e.getMessage());
         }
 
         ServerMessage loadGame = new LoadGameMessage(game.game());
@@ -176,22 +162,26 @@ public class WebSocketHandler {
     }
 
     private void checkGameStatus(String username, GameData game) throws IOException, DataAccessException {
-        String notifyJson;
-        ServerMessage notify;
         String extra = null;
+        boolean gameOver = false;
         if (game.game().isInCheckmate(game.game().getTeamTurn())) {
-            extra = String.format("Checkmate. %s wins!", username);
-            game.game().setActive(false);
+            extra = String.format("checkmate. %s wins!", username);
+            gameOver = true;
         } else if (game.game().isInStalemate(game.game().getTeamTurn())) {
-            extra = "The game ends in a stalemate";
-            game.game().setActive(false);
+            extra = "stalemate. The game ends in a draw";
+            gameOver = true;
         } else if (game.game().isInCheck(game.game().getTeamTurn())) {
-            extra = "Check";
+            extra = "check.";
         }
         if (extra != null) {
-            notify = new NotificationMessage(extra);
-            notifyJson = Serializer.serialize(notify);
+            String opponenet = opponentUsername(username, game);
+            String message = String.format("%s's move places %s in %s", username, opponenet, extra);
+            ServerMessage notify = new NotificationMessage(message);
+            String notifyJson = Serializer.serialize(notify);
             connectionManager.broadcast(notifyJson, game.gameID(), null);
+            if(gameOver) {
+                game.game().setActive(false);
+            }
             dataAccess.getGameDAO().updateGame(game);
         }
     }
@@ -204,15 +194,11 @@ public class WebSocketHandler {
         game.game().setActive(false);
         dataAccess.getGameDAO().updateGame(game);
 
-        String opponent = (Objects.equals(username, game.whiteUsername())) ? game.blackUsername() : game.whiteUsername();
-        StringBuilder messageBuilder = new StringBuilder(username).append(" has resigned.");
-        if(opponent != null) {
-            messageBuilder.append(" ").append(opponent).append(" wins!");
-        }
-        ServerMessage notify = new NotificationMessage(messageBuilder.toString());
+        String opponent = opponentUsername(username, game);
+        String message = String.format("%s has resigned. %s wins!", username, opponent);
+        ServerMessage notify = new NotificationMessage(message);
         String notifyJson = Serializer.serialize(notify);
         connectionManager.broadcast(notifyJson, game.gameID(), session);
-
 
         notify = new NotificationMessage("You have resigned.");
         notifyJson = Serializer.serialize(notify);
@@ -221,11 +207,25 @@ public class WebSocketHandler {
 
     private void confirmGameStatus(GameData game, String username) throws WebsocketException {
         if (!(Objects.equals(game.blackUsername(), username) || Objects.equals(game.whiteUsername(), username))) {
-            throw new WebsocketException("Error: You are not a participant in this game");
+            throw new WebsocketException("You are not a player in this game");
         }
 
         if (!game.game().isActive()) {
-            throw new WebsocketException("Error: Game is over");
+            throw new WebsocketException("Game is over");
+        }
+    }
+
+    private String opponentUsername(String username, GameData game) {
+        return (Objects.equals(username, game.whiteUsername())) ? game.blackUsername() : game.whiteUsername();
+    }
+
+    private String positionInGame(String username, GameData game) {
+        if (username.equals(game.whiteUsername())) {
+            return "playing as white";
+        } else if (username.equals(game.blackUsername())) {
+            return "playing as black";
+        } else {
+            return "watching";
         }
     }
 
