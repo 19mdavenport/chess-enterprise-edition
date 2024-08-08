@@ -68,7 +68,7 @@ public class WebSocketHandler {
             LOGGER.debug("Received from {}: {}", session.getRemoteAddress(), message);
             UserGameCommand command = Serializer.deserialize(message, UserGameCommand.class);
 
-            AuthData token = dataAccess.getAuthDAO().findAuth(command.getAuthString());
+            AuthData token = dataAccess.getAuthDAO().findAuth(command.getAuthToken());
             if (token == null) {
                 throw new WebsocketException("Invalid authtoken");
             }
