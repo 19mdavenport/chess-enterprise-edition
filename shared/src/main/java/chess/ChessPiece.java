@@ -1,6 +1,8 @@
 package chess;
 
-import chess.strategies.piecemoves.*;
+import chess.factories.piecemoves.PieceMovesStrategyFactory;
+import chess.factories.piecemoves.PieceMovesStrategyFactoryFactory;
+import chess.strategies.piecemoves.PieceMovesStrategy;
 
 import java.util.Collection;
 
@@ -55,14 +57,10 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return (switch (board.getPiece(myPosition).pieceType) {
-            case KING -> new KingPieceMovesStrategy();
-            case QUEEN -> new QueenPieceMovesStrategy();
-            case BISHOP -> new BishopPieceMovesStrategy();
-            case KNIGHT -> new KnightPieceMovesStrategy();
-            case ROOK -> new RookPieceMovesStrategy();
-            case PAWN -> new PawnPieceMovesStrategy();
-        }).pieceMoves(board, myPosition);
+        PieceMovesStrategyFactoryFactory strategyFactoryFactory = new PieceMovesStrategyFactoryFactory(pieceType);
+        PieceMovesStrategyFactory<?> strategyFactory = strategyFactoryFactory.get();
+        PieceMovesStrategy pieceMovesStrategy = strategyFactory.get();
+        return pieceMovesStrategy.pieceMoves(board, myPosition);
     }
 
 
@@ -74,8 +72,8 @@ public class ChessPiece {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ChessPiece that = (ChessPiece) o;
-        return teamColor == that.teamColor && pieceType == that.pieceType;
+        ChessPiece o1 = (ChessPiece) o;
+        return teamColor == o1.teamColor && pieceType == o1.pieceType;
     }
 
 
