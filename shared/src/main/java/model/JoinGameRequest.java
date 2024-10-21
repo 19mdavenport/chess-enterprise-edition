@@ -1,5 +1,5 @@
 package model;
 
-import chess.ChessGame;
+import chess.TeamColor;
 
-public record JoinGameRequest(ChessGame.TeamColor playerColor, int gameID) {}
+public record JoinGameRequest(TeamColor playerColor, int gameID) {}

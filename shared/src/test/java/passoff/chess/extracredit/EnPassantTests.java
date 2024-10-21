@@ -54,7 +54,7 @@ public class EnPassantTests {
                 | | | | |K| | | |
                 """);
 
-        assertValidEnPassant(board, ChessGame.TeamColor.BLACK, setupMove, enPassantMove, endBoard);
+        assertValidEnPassant(board, TeamColor.BLACK, setupMove, enPassantMove, endBoard);
     }
 
 
@@ -95,7 +95,7 @@ public class EnPassantTests {
                 | | | | |K| | | |
                 """);
 
-        assertValidEnPassant(board, ChessGame.TeamColor.BLACK, setupMove, enPassantMove, endBoard);
+        assertValidEnPassant(board, TeamColor.BLACK, setupMove, enPassantMove, endBoard);
     }
 
 
@@ -135,7 +135,7 @@ public class EnPassantTests {
                 | | | | | | | | |
                 """);
 
-        assertValidEnPassant(board, ChessGame.TeamColor.WHITE, setupMove, enPassantMove, endBoard);
+        assertValidEnPassant(board, TeamColor.WHITE, setupMove, enPassantMove, endBoard);
     }
 
 
@@ -174,7 +174,7 @@ public class EnPassantTests {
                 | | | | | | | | |
                 | | | | | | | | |
                 """);
-        assertValidEnPassant(board, ChessGame.TeamColor.WHITE, setupMove, enPassantMove, endBoard);
+        assertValidEnPassant(board, TeamColor.WHITE, setupMove, enPassantMove, endBoard);
     }
 
 
@@ -193,7 +193,7 @@ public class EnPassantTests {
                 """);
         ChessGame game = new ChessGame();
         game.setBoard(board);
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
 
         //move black piece 2 spaces
         game.makeMove(new ChessMove(new ChessPosition(7, 3), new ChessPosition(5, 3), null));
@@ -229,7 +229,7 @@ public class EnPassantTests {
                 "ChessGame validMoves contained a En Passant move after the move became invalid");
     }
 
-    private void assertValidEnPassant(ChessBoard board, ChessGame.TeamColor turn, ChessMove setupMove,
+    private void assertValidEnPassant(ChessBoard board, TeamColor turn, ChessMove setupMove,
                                       ChessMove enPassantMove, ChessBoard endBoard) throws InvalidMoveException {
         ChessGame game = new ChessGame();
         game.setBoard(board);

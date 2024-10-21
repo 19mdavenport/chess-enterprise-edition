@@ -5,10 +5,11 @@ import chess.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 public class CastlingRules implements ExtraRuleset {
 
-    private boolean[] castlingOptions;
+    private final boolean[] castlingOptions;
 
     public CastlingRules() {
         castlingOptions = new boolean[4];
@@ -21,39 +22,39 @@ public class CastlingRules implements ExtraRuleset {
         ChessPiece whiteRookK = board.getPiece(new ChessPosition(1, 8));
         ChessPiece whiteRookQ = board.getPiece(new ChessPosition(1, 1));
 
-        if (whiteKing == null || whiteKing.getPieceType() != ChessPiece.PieceType.KING) {
+        if (whiteKing == null || whiteKing.getPieceType() != PieceType.KING) {
             castlingOptions[0] = false;
             castlingOptions[1] = false;
         } else {
-            castlingOptions[0] = (whiteRookK != null && whiteRookK.getPieceType() == ChessPiece.PieceType.ROOK);
-            castlingOptions[1] = (whiteRookQ != null && whiteRookQ.getPieceType() == ChessPiece.PieceType.ROOK);
+            castlingOptions[0] = (whiteRookK != null && whiteRookK.getPieceType() == PieceType.ROOK);
+            castlingOptions[1] = (whiteRookQ != null && whiteRookQ.getPieceType() == PieceType.ROOK);
         }
 
         ChessPiece blackKing = board.getPiece(new ChessPosition(8, 5));
         ChessPiece blackRookK = board.getPiece(new ChessPosition(8, 8));
         ChessPiece blackRookQ = board.getPiece(new ChessPosition(8, 1));
 
-        if (blackKing == null || blackKing.getPieceType() != ChessPiece.PieceType.KING) {
+        if (blackKing == null || blackKing.getPieceType() != PieceType.KING) {
             castlingOptions[2] = false;
             castlingOptions[3] = false;
         } else {
-            castlingOptions[2] = (blackRookK != null && blackRookK.getPieceType() == ChessPiece.PieceType.ROOK);
-            castlingOptions[3] = (blackRookQ != null && blackRookQ.getPieceType() == ChessPiece.PieceType.ROOK);
+            castlingOptions[2] = (blackRookK != null && blackRookK.getPieceType() == PieceType.ROOK);
+            castlingOptions[3] = (blackRookQ != null && blackRookQ.getPieceType() == PieceType.ROOK);
         }
     }
 
 
     public void moveMade(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getEndPosition());
-        if (piece.getPieceType() == ChessPiece.PieceType.KING) {
-            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+        if (piece.getPieceType() == PieceType.KING) {
+            if (piece.getTeamColor() == TeamColor.WHITE) {
                 castlingOptions[0] = false;
                 castlingOptions[1] = false;
             } else {
                 castlingOptions[2] = false;
                 castlingOptions[3] = false;
             }
-        } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
+        } else if (piece.getPieceType() == PieceType.ROOK) {
             ChessPosition startPos = move.getStartPosition();
             if (castlingOptions[0] && startPos.getRow() == 1 && startPos.getColumn() == 8) {
                 castlingOptions[0] = false;
@@ -72,9 +73,9 @@ public class CastlingRules implements ExtraRuleset {
 
 
     @Override
-    public boolean moveMatches(ChessMove move, ChessBoard board) {
+    public boolean isMoveMatch(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getStartPosition());
-        return (piece.getPieceType() == ChessPiece.PieceType.KING &&
+        return (piece.getPieceType() == PieceType.KING &&
                 Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) == 2);
     }
 
@@ -84,25 +85,21 @@ public class CastlingRules implements ExtraRuleset {
 
         ChessPiece piece = board.getPiece(position);
 
-        if (piece == null || piece.getPieceType() != ChessPiece.PieceType.KING || position.getColumn() != 5 ||
-                ((piece.getTeamColor() == ChessGame.TeamColor.WHITE && position.getRow() != 1) ||
-                        (piece.getTeamColor() == ChessGame.TeamColor.BLACK && position.getRow() != 8))) {
+        if (piece == null || piece.getPieceType() != PieceType.KING || position.getColumn() != 5 ||
+                ((piece.getTeamColor() == TeamColor.WHITE && position.getRow() != 1) ||
+                        (piece.getTeamColor() == TeamColor.BLACK && position.getRow() != 8))) {
             return ret;
         }
 
-        int offset = piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 0 : 2;
+        int offset = piece.getTeamColor() == TeamColor.WHITE ? 0 : 2;
 
         if (castlingOptions[offset]) {
-            ChessMove kingSideCastle = singleCastlingMove(board, piece.getTeamColor(), true);
-            if (kingSideCastle != null) {
-                ret.add(kingSideCastle);
-            }
+            Optional<ChessMove> kingSideCastle = singleCastlingMove(board, piece.getTeamColor(), true);
+            kingSideCastle.ifPresent(ret::add);
         }
         if (castlingOptions[offset + 1]) {
-            ChessMove queenSideCastle = singleCastlingMove(board, piece.getTeamColor(), false);
-            if (queenSideCastle != null) {
-                ret.add(queenSideCastle);
-            }
+            Optional<ChessMove> queenSideCastle = singleCastlingMove(board, piece.getTeamColor(), false);
+            queenSideCastle.ifPresent(ret::add);
         }
 
         return ret;
@@ -111,7 +108,7 @@ public class CastlingRules implements ExtraRuleset {
 
     public void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException {
         if (move.getPromotionPiece() != null ||
-                board.getPiece(move.getStartPosition()).getPieceType() != ChessPiece.PieceType.KING ||
+                board.getPiece(move.getStartPosition()).getPieceType() != PieceType.KING ||
                 Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) != 2) {
             throw new InvalidMoveException("Not a valid castling move");
         }
@@ -130,17 +127,17 @@ public class CastlingRules implements ExtraRuleset {
     }
 
 
-    private ChessMove singleCastlingMove(ChessBoard board, ChessGame.TeamColor color, boolean kingSide) {
+    private Optional<ChessMove> singleCastlingMove(ChessBoard board, TeamColor color, boolean kingSide) {
         if (ChessGame.isInCheck(color, board)) {
-            return null;
+            return Optional.empty();
         }
 
-        int row = (color == ChessGame.TeamColor.WHITE) ? 1 : 8;
+        int row = (color == TeamColor.WHITE) ? 1 : 8;
         int col = (kingSide) ? 6 : 4;
 
         for (int i = col; i < 8 && i > 1; i += col - 5) {
             if (board.getPiece(new ChessPosition(row, i)) != null) {
-                return null;
+                return Optional.empty();
             }
         }
 
@@ -149,7 +146,7 @@ public class CastlingRules implements ExtraRuleset {
         betweenBoard.addPiece(new ChessPosition(row, col), betweenBoard.getPiece(orig));
         betweenBoard.addPiece(orig, null);
         if (ChessGame.isInCheck(color, betweenBoard)) {
-            return null;
+            return Optional.empty();
         }
 
         ChessPosition end = new ChessPosition(row, 5 + 2 * (col - 5));
@@ -158,9 +155,9 @@ public class CastlingRules implements ExtraRuleset {
         try {
             performMove(out, outBoard);
         } catch (InvalidMoveException e) {
-            return null;
+            return Optional.empty();
         }
-        return (ChessGame.isInCheck(color, outBoard)) ? null : out;
+        return Optional.ofNullable((ChessGame.isInCheck(color, outBoard)) ? null : out);
     }
 
 
@@ -171,35 +168,25 @@ public class CastlingRules implements ExtraRuleset {
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-
-        CastlingRules that = (CastlingRules) o;
-
-        return Arrays.equals(castlingOptions, that.castlingOptions);
+        CastlingRules obj1 = (CastlingRules) obj;
+        return Arrays.equals(castlingOptions, obj1.castlingOptions);
     }
 
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append((castlingOptions[0] ? 'K' : '-'))
-                .append((castlingOptions[1]) ? 'Q' : '-')
-                .append((castlingOptions[2]) ? 'k' : '-')
-                .append((castlingOptions[3]) ? 'q' : '-')
-                .toString();
-    }
-
-    @Override
-    public CastlingRules clone() throws CloneNotSupportedException {
-        CastlingRules clone = (CastlingRules) super.clone();
-        clone.castlingOptions = Arrays.copyOf(castlingOptions, castlingOptions.length);
-        return clone;
+        return "%s%s%s%s".formatted(
+                castlingOptions[0] ? 'K' : '-',
+                castlingOptions[1] ? 'Q' : '-',
+                castlingOptions[2] ? 'k' : '-',
+                castlingOptions[3] ? 'q' : '-');
     }
 
 }

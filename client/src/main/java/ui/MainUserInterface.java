@@ -1,6 +1,6 @@
 package ui;
 
-import chess.ChessGame;
+import chess.TeamColor;
 import data.DataCache;
 import model.GameData;
 import model.JoinGameRequest;
@@ -130,10 +130,10 @@ public class MainUserInterface implements UserInterface {
             return new CommandOutput("Usage: watch <GAME ID>", false);
         }
 
-        ChessGame.TeamColor color = null;
+        TeamColor color = null;
         if(join) {
             try {
-                color = ChessGame.TeamColor.valueOf(args[1].toUpperCase());
+                color = TeamColor.valueOf(args[1].toUpperCase());
             } catch (IllegalArgumentException e) {
                 return new CommandOutput(String.format("Unable to parse %s as a color", args[1]), false);
             }

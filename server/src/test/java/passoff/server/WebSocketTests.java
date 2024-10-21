@@ -50,8 +50,8 @@ public class WebSocketTests {
         black = registerUser("black", "BLACK", "black@chess.com");
         observer = registerUser("observer", "OBSERVER", "observer@chess.com");
         gameID = createGame(white, "testGame");
-        joinGame(gameID, white, ChessGame.TeamColor.WHITE);
-        joinGame(gameID, black, ChessGame.TeamColor.BLACK);
+        joinGame(gameID, white, TeamColor.WHITE);
+        joinGame(gameID, black, TeamColor.BLACK);
     }
 
     @AfterEach
@@ -233,7 +233,7 @@ public class WebSocketTests {
 
         //replace white player with a different player
         WebsocketUser white2 = registerUser("white2", "WHITE", "white2@chess.com");
-        joinGame(gameID, white2, ChessGame.TeamColor.WHITE);
+        joinGame(gameID, white2, TeamColor.WHITE);
         connectToGame(white2, gameID, true, Set.of(black, observer), Set.of(white));
 
         //new white player can make move
@@ -252,8 +252,8 @@ public class WebSocketTests {
         WebsocketUser black2 = registerUser("black2", "BLACK", "black2@chess.com");
         WebsocketUser observer2 = registerUser("observer2", "OBSERVER", "observer2@chess.com");
         int otherGameID = createGame(white, "testGame2");
-        joinGame(otherGameID, white2, ChessGame.TeamColor.WHITE);
-        joinGame(otherGameID, black2, ChessGame.TeamColor.BLACK);
+        joinGame(otherGameID, white2, TeamColor.WHITE);
+        joinGame(otherGameID, black2, TeamColor.BLACK);
         connectToGame(white2, otherGameID, true, Set.of(), Set.of(white, black, observer));
         connectToGame(black2, otherGameID, true, Set.of(white2), Set.of(white, black, observer));
         connectToGame(observer2, otherGameID, true,  Set.of(white2, black2), Set.of(white, black, observer));
@@ -287,7 +287,7 @@ public class WebSocketTests {
         return createResult.getGameID();
     }
 
-    private void joinGame(int gameID, WebsocketUser user, ChessGame.TeamColor color) {
+    private void joinGame(int gameID, WebsocketUser user, TeamColor color) {
         TestResult result = serverFacade.joinPlayer(new TestJoinRequest(color, gameID), user.authToken());
         assertHttpOk(result, "joining a player to a game");
     }

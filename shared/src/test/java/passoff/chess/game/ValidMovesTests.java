@@ -3,6 +3,7 @@ package passoff.chess.game;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
+import chess.TeamColor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ public class ValidMovesTests {
     public void forcedMove() {
 
         var game = new ChessGame();
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
         game.setBoard(loadBoard("""
                     | | | | | | | | |
                     | | | | | | | | |
@@ -93,7 +94,7 @@ public class ValidMovesTests {
     public void kingInDanger() {
 
         var game = new ChessGame();
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
         game.setBoard(loadBoard("""
                     |R| | | | | | | |
                     | | | |k| | | |b|
@@ -160,7 +161,7 @@ public class ValidMovesTests {
     public void validMovesOtherTeam() {
         var game = new ChessGame();
         game.setBoard(defaultBoard());
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
 
         ChessPosition position = new ChessPosition(2, 5);
         var validMoves = loadMoves(position, new int[][]{

@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import chess.TeamColor;
 import dataaccess.*;
 import dataaccess.memory.MemoryDataAccess;
 import model.*;
@@ -155,7 +156,7 @@ public class GameServiceTest {
         authDAO.insertAuth(token);
 
 
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.WHITE, game.gameID());
+        JoinGameRequest request = new JoinGameRequest(TeamColor.WHITE, game.gameID());
 
         Assertions.assertDoesNotThrow(() -> new GameService(dataAccess).joinGame(request, token.authToken()));
 
@@ -172,7 +173,7 @@ public class GameServiceTest {
     @Test
     public void joinGameFail() {
 
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.WHITE, -1);
+        JoinGameRequest request = new JoinGameRequest(TeamColor.WHITE, -1);
 
         Assertions.assertThrows(BadRequestException.class,
                 () -> new GameService(dataAccess).joinGame(request, "Invalid token"));

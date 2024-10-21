@@ -1,9 +1,6 @@
 package passoff.chess.game;
 
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
-import chess.InvalidMoveException;
+import chess.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -90,17 +87,17 @@ public class FullGameTest {
                 |P|P|P|P| |P|P|P|
                 |R|N|B| |K| |N|R|
          */
-        Assertions.assertTrue(game.isInCheck(ChessGame.TeamColor.BLACK),
+        Assertions.assertTrue(game.isInCheck(TeamColor.BLACK),
                 "Black is in check but isInCheck returned false");
-        Assertions.assertFalse(game.isInCheck(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheck(TeamColor.WHITE),
                 "White is not in check but isInCheck returned true");
-        Assertions.assertTrue(game.isInCheckmate(ChessGame.TeamColor.BLACK),
+        Assertions.assertTrue(game.isInCheckmate(TeamColor.BLACK),
                 "Black is in checkmate but isInCheckmate returned false");
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.WHITE),
                 "White is not in checkmate but isInCheckmate returned true");
-        Assertions.assertFalse(game.isInStalemate(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInStalemate(TeamColor.BLACK),
                 "Black is not in stalemate but isInStalemate returned true");
-        Assertions.assertFalse(game.isInStalemate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInStalemate(TeamColor.WHITE),
                 "White is not in stalemate but isInStalemate returned true");
     }
 }

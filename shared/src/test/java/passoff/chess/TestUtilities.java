@@ -26,13 +26,13 @@ public class TestUtilities {
         Assertions.assertEquals(first.size(), second.size(), "Collections not the same size");
     }
 
-    final static Map<Character, ChessPiece.PieceType> CHAR_TO_TYPE_MAP = Map.of(
-            'p', ChessPiece.PieceType.PAWN,
-            'n', ChessPiece.PieceType.KNIGHT,
-            'r', ChessPiece.PieceType.ROOK,
-            'q', ChessPiece.PieceType.QUEEN,
-            'k', ChessPiece.PieceType.KING,
-            'b', ChessPiece.PieceType.BISHOP);
+    final static Map<Character, PieceType> CHAR_TO_TYPE_MAP = Map.of(
+            'p', PieceType.PAWN,
+            'n', PieceType.KNIGHT,
+            'r', PieceType.ROOK,
+            'q', PieceType.QUEEN,
+            'k', PieceType.KING,
+            'b', PieceType.BISHOP);
 
     public static ChessBoard loadBoard(String boardText) {
         var board = new ChessBoard();
@@ -48,8 +48,8 @@ public class TestUtilities {
                 case '|' -> {
                 }
                 default -> {
-                    ChessGame.TeamColor color = Character.isLowerCase(c) ? ChessGame.TeamColor.BLACK
-                            : ChessGame.TeamColor.WHITE;
+                    TeamColor color = Character.isLowerCase(c) ? TeamColor.BLACK
+                            : TeamColor.WHITE;
                     var type = CHAR_TO_TYPE_MAP.get(Character.toLowerCase(c));
                     var position = new ChessPosition(row, column);
                     var piece = new ChessPiece(color, type);

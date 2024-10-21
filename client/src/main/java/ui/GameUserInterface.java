@@ -1,8 +1,8 @@
 package ui;
 
 import chess.ChessMove;
-import chess.ChessPiece;
 import chess.ChessPosition;
+import chess.PieceType;
 import data.DataCache;
 
 import java.io.IOException;
@@ -68,16 +68,16 @@ public class GameUserInterface implements UserInterface {
             return new CommandOutput("Could not parse %s as a position".formatted(args[1]), false);
         }
 
-        ChessPiece.PieceType promotion = null;
+        PieceType promotion = null;
         if (args.length == 3) {
             if (args[2].length() != 1) {
                 return new CommandOutput("Could not parse %s as a piece type".formatted(args[3]), false);
             }
             switch (args[2].charAt(0)) {
-                case 'q' -> promotion = ChessPiece.PieceType.QUEEN;
-                case 'r' -> promotion = ChessPiece.PieceType.ROOK;
-                case 'b' -> promotion = ChessPiece.PieceType.BISHOP;
-                case 'n' -> promotion = ChessPiece.PieceType.KNIGHT;
+                case 'q' -> promotion = PieceType.QUEEN;
+                case 'r' -> promotion = PieceType.ROOK;
+                case 'b' -> promotion = PieceType.BISHOP;
+                case 'n' -> promotion = PieceType.KNIGHT;
                 case 'k' -> {
                     return new CommandOutput("Cannot promote to king", false);
                 }

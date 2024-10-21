@@ -1,8 +1,8 @@
 package passoff.chess;
 
 import chess.ChessMove;
-import chess.ChessPiece;
 import chess.ChessPosition;
+import chess.PieceType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ public class ChessMoveTests {
         startDifferent = new ChessMove(new ChessPosition(2, 4), new ChessPosition(1, 5), null);
         endDifferent = new ChessMove(new ChessPosition(2, 6), new ChessPosition(5, 3), null);
         promoteDifferent = new ChessMove(new ChessPosition(2, 6), new ChessPosition(1, 5),
-                ChessPiece.PieceType.QUEEN);
+                PieceType.QUEEN);
     }
 
     @Test

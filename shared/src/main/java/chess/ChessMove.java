@@ -12,7 +12,7 @@ public class ChessMove {
 
     private final ChessPosition endPosition;
 
-    private final ChessPiece.PieceType promotionPiece;
+    private final PieceType promotionPiece;
 
     private final ChessPosition startPosition;
 
@@ -35,8 +35,8 @@ public class ChessMove {
      * @param endPosition    Ending position of the move
      * @param promotionPiece Piece to promote to during the move
      */
-    public ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
-        if (promotionPiece == ChessPiece.PieceType.KING || promotionPiece == ChessPiece.PieceType.PAWN) {
+    public ChessMove(ChessPosition startPosition, ChessPosition endPosition, PieceType promotionPiece) {
+        if (promotionPiece == PieceType.KING || promotionPiece == PieceType.PAWN) {
             throw new IllegalArgumentException("Invalid promotion piece");
         }
         this.startPosition = startPosition;
@@ -67,7 +67,7 @@ public class ChessMove {
      *
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
-    public ChessPiece.PieceType getPromotionPiece() {
+    public PieceType getPromotionPiece() {
         return promotionPiece;
     }
 
@@ -109,7 +109,7 @@ public class ChessMove {
                 case BISHOP -> 'b';
                 case KNIGHT -> 'n';
                 case ROOK -> 'r';
-                case KING, PAWN -> throw new IllegalStateException("Invalid promotion piece");
+                case KING, PAWN -> throw new IllegalStateException("Invalid promotion piece: " + promotionPiece);
             });
         }
 

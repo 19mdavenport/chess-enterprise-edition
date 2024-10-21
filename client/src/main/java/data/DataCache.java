@@ -1,6 +1,7 @@
 package data;
 
 import chess.ChessGame;
+import chess.TeamColor;
 import ui.*;
 import web.ServerFacade;
 import web.WebSocketClient;
@@ -29,7 +30,7 @@ public class DataCache {
 
     private int gameId;
 
-    private ChessGame.TeamColor playerColor;
+    private TeamColor playerColor;
 
     private ServerFacade facade;
 
@@ -90,11 +91,11 @@ public class DataCache {
         this.gameId = gameId;
     }
 
-    public ChessGame.TeamColor getPlayerColor() {
+    public TeamColor getPlayerColor() {
         return playerColor;
     }
 
-    public void setPlayerColor(ChessGame.TeamColor playerColor) {
+    public void setPlayerColor(TeamColor playerColor) {
         this.playerColor = playerColor;
     }
 

@@ -3,6 +3,7 @@ package ui;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import chess.TeamColor;
 import data.DataCache;
 
 import java.util.Collection;
@@ -26,9 +27,9 @@ public class BoardPrinter {
 
     private static void printGame(ChessGame game, ChessPosition position, Collection<ChessPosition> differences) {
         System.out.println();
-        ChessGame.TeamColor perspective = DataCache.getInstance().getPlayerColor();
+        TeamColor perspective = DataCache.getInstance().getPlayerColor();
         if (perspective == null) {
-            perspective = ChessGame.TeamColor.WHITE;
+            perspective = TeamColor.WHITE;
         }
         ChessBoardColorScheme colorScheme = DataCache.getInstance().getColorScheme();
         printHeader(colorScheme, perspective);
@@ -38,14 +39,14 @@ public class BoardPrinter {
                 new HashSet<>();
 
         for (int i = 1; i <= 8; i++) {
-            int row = (perspective == ChessGame.TeamColor.WHITE) ? 9 - i : i;
+            int row = (perspective == TeamColor.WHITE) ? 9 - i : i;
 
             System.out.print(colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BORDER_TEXT));
             System.out.print(colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BORDER));
             System.out.printf(" %d ", row);
 
             for (int j = 1; j <= 8; j++) {
-                int col = (perspective == ChessGame.TeamColor.BLACK) ? 9 - j : j;
+                int col = (perspective == TeamColor.BLACK) ? 9 - j : j;
 
                 ChessPosition pos = new ChessPosition(row, col);
 
@@ -105,12 +106,12 @@ public class BoardPrinter {
     }
 
 
-    private static void printHeader(ChessBoardColorScheme colorScheme, ChessGame.TeamColor perspective) {
+    private static void printHeader(ChessBoardColorScheme colorScheme, TeamColor perspective) {
         System.out.print(colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BORDER_TEXT));
         System.out.print(colorScheme.getColorEscapeSequence(ChessBoardColorScheme.ColorType.BORDER));
         System.out.print("   ");
 
-        if (perspective == ChessGame.TeamColor.BLACK) {
+        if (perspective == TeamColor.BLACK) {
             for (char c = 'h'; c >= 'a'; c--) {
                 System.out.printf("\u2003%s ", c);
             }

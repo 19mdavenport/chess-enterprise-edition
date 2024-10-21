@@ -1,8 +1,8 @@
 package passoff.chess.piece;
 
 import chess.ChessMove;
-import chess.ChessPiece;
 import chess.ChessPosition;
+import chess.PieceType;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -246,10 +246,10 @@ public class PawnMoveTests {
         var validMoves = new HashSet<ChessMove>();
         for (var endPosition : endPositions) {
             var end = new ChessPosition(endPosition[0], endPosition[1]);
-            validMoves.add(new ChessMove(startingPosition, end, ChessPiece.PieceType.QUEEN));
-            validMoves.add(new ChessMove(startingPosition, end, ChessPiece.PieceType.BISHOP));
-            validMoves.add(new ChessMove(startingPosition, end, ChessPiece.PieceType.ROOK));
-            validMoves.add(new ChessMove(startingPosition, end, ChessPiece.PieceType.KNIGHT));
+            validMoves.add(new ChessMove(startingPosition, end, PieceType.QUEEN));
+            validMoves.add(new ChessMove(startingPosition, end, PieceType.BISHOP));
+            validMoves.add(new ChessMove(startingPosition, end, PieceType.ROOK));
+            validMoves.add(new ChessMove(startingPosition, end, PieceType.KNIGHT));
         }
 
         validateMoves(board, testPiece, startingPosition, validMoves);

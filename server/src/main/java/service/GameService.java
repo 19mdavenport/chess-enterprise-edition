@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import chess.TeamColor;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
@@ -59,17 +60,17 @@ public class GameService {
 
             AuthData auth = authorization(authToken);
 
-            if (request.playerColor() == ChessGame.TeamColor.WHITE && game.whiteUsername() != null &&
+            if (request.playerColor() == TeamColor.WHITE && game.whiteUsername() != null &&
                     !game.whiteUsername().equals(auth.username()) ||
-                    request.playerColor() == ChessGame.TeamColor.BLACK && game.blackUsername() != null &&
+                    request.playerColor() == TeamColor.BLACK && game.blackUsername() != null &&
                             !game.blackUsername().equals(auth.username())) {
                 throw new RequestItemTakenException("Error: Player color taken");
             }
 
-            if (request.playerColor() == ChessGame.TeamColor.WHITE) {
+            if (request.playerColor() == TeamColor.WHITE) {
                 game = new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game());
             }
-            if (request.playerColor() == ChessGame.TeamColor.BLACK) {
+            if (request.playerColor() == TeamColor.BLACK) {
                 game = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
             }
 

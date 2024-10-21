@@ -10,7 +10,8 @@ import java.util.HashSet;
 
 public abstract class LineMovePieceMovesStrategy implements PieceMovesStrategy {
 
-    protected Collection<ChessMove> lineMove(ChessBoard board, ChessPosition myPosition, int vertical, int horizontal) {
+    protected static Collection<ChessMove> lineMove(ChessBoard board, ChessPosition myPosition, int vertical,
+                                                    int horizontal) {
         Collection<ChessMove> moves = new HashSet<>();
 
         ChessPosition newPos;

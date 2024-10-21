@@ -1,6 +1,6 @@
 package client;
 
-import chess.ChessGame;
+import chess.TeamColor;
 import model.*;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -133,14 +133,14 @@ public class ServerFacadeTests {
         GameData cGRequest = new GameData(0, null, null, gameName, null);
         GameData cGResult = facade.createGame(cGRequest);
 
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.BLACK, cGResult.gameID());
+        JoinGameRequest request = new JoinGameRequest(TeamColor.BLACK, cGResult.gameID());
         Assertions.assertDoesNotThrow(() -> facade.joinGame(request));
     }
 
 
     @Test
     public void joinGameFail() {
-        JoinGameRequest request = new JoinGameRequest(ChessGame.TeamColor.WHITE, 123456789);
+        JoinGameRequest request = new JoinGameRequest(TeamColor.WHITE, 123456789);
         Assertions.assertThrows(ResponseException.class, () -> facade.joinGame(request));
     }
 

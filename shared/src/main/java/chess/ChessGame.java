@@ -4,7 +4,6 @@ import chess.strategies.extra.CastlingRules;
 import chess.strategies.extra.EnPassantRules;
 import chess.strategies.extra.ExtraRuleset;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +20,9 @@ public class ChessGame {
 
     private TeamColor teamTurn;
 
-    boolean active;
+    private boolean active;
 
-    private List<ExtraRuleset> extraRules;
-
+    private final List<ExtraRuleset> extraRules;
 
     public ChessGame() {
         board = new ChessBoard();
@@ -33,20 +31,6 @@ public class ChessGame {
         board.resetBoard();
         active = true;
         extraRules = List.of(new CastlingRules(), new EnPassantRules());
-    }
-
-    public ChessGame(ChessGame copy) {
-        this.board = new ChessBoard(copy.board);
-        this.teamTurn = copy.teamTurn;
-        this.active = copy.active;
-        this.extraRules = new ArrayList<>(copy.extraRules.size());
-        for(int i = 0; i < copy.extraRules.size(); i++) {
-            try {
-                extraRules.add(i, copy.extraRules.get(i).clone());
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     /**
@@ -68,25 +52,13 @@ public class ChessGame {
 
 
     /**
-     * Enum identifying the 2 possible teams in a chess game
-     */
-    public enum TeamColor {
-        WHITE, BLACK;
-
-
-        public TeamColor getOpposite() {
-            return (this == WHITE) ? BLACK : WHITE;
-        }
-    }
-
-
-    /**
      * Gets a valid moves for a piece at the given location
      *
      * @param startPosition the piece to get valid moves for
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
+    @SuppressWarnings("ReturnOfNull")
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = board.getPiece(startPosition);
 
@@ -107,7 +79,7 @@ public class ChessGame {
     }
 
 
-    public boolean isMoveInvalid(ChessMove move, ChessBoard board) {
+    private boolean isMoveInvalid(ChessMove move, ChessBoard board) {
         try {
             ChessBoard copyBoard = new ChessBoard(board);
             ChessPiece movingPiece = copyBoard.getPiece(move.getStartPosition());
@@ -171,7 +143,7 @@ public class ChessGame {
                 ChessPosition pos = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(pos);
                 if (piece != null && piece.getTeamColor() == teamColor &&
-                        piece.getPieceType() == ChessPiece.PieceType.KING) {
+                        piece.getPieceType() == PieceType.KING) {
                     king = pos;
                     break;
                 }
@@ -184,7 +156,7 @@ public class ChessGame {
 
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
-                if(positionThreatensKing(new ChessPosition(i, j), board, king, teamColor)) {
+                if(isKingThreatened(new ChessPosition(i, j), board, king, teamColor)) {
                     return true;
                 }
             }
@@ -193,8 +165,8 @@ public class ChessGame {
         return false;
     }
 
-    private static boolean positionThreatensKing(ChessPosition position, ChessBoard board,
-                                                 ChessPosition kingPosition, TeamColor teamColor) {
+    private static boolean isKingThreatened(ChessPosition position, ChessBoard board,
+                                            ChessPosition kingPosition, TeamColor teamColor) {
         ChessPiece piece = board.getPiece(position);
         if (piece != null && piece.getTeamColor() != teamColor) {
             for (ChessMove move : piece.pieceMoves(board, position)) {
@@ -214,7 +186,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        return isInCheck(teamColor) && noValidMovesExist(teamColor);
+        return isInCheck(teamColor) && isTeamTrapped(teamColor);
     }
 
 
@@ -226,11 +198,11 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        return !isInCheck(teamColor) && noValidMovesExist(teamColor);
+        return !isInCheck(teamColor) && isTeamTrapped(teamColor);
     }
 
 
-    private boolean noValidMovesExist(TeamColor teamColor) {
+    private boolean isTeamTrapped(TeamColor teamColor) {
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
@@ -270,26 +242,20 @@ public class ChessGame {
 
 
     private void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException {
-        ChessPiece piece = board.getPiece(move.getStartPosition());
-
-        //If there is no piece at the starting location or if said piece is the wrong color, the move is invalid
-        if (piece == null) {
-            throw new InvalidMoveException("No piece at starting position");
-        }
-
         for (ExtraRuleset extraRuleset : extraRules) {
-            if (extraRuleset.moveMatches(move, board)) {
+            if (extraRuleset.isMoveMatch(move, board)) {
                 extraRuleset.performMove(move, board);
                 return;
             }
         }
 
+        ChessPiece piece = board.getPiece(move.getStartPosition());
         if (move.getPromotionPiece() == null) {
             piece = board.getPiece(move.getStartPosition());
             board.addPiece(move.getStartPosition(), null);
             board.addPiece(move.getEndPosition(), piece);
         } else { //Promotions
-            if (piece.getPieceType() != ChessPiece.PieceType.PAWN) {
+            if (piece.getPieceType() != PieceType.PAWN) {
                 throw new InvalidMoveException("Move with promotion piece not on pawn");
             }
             if ((piece.getTeamColor() == TeamColor.WHITE && move.getEndPosition().getRow() != 8) ||
@@ -324,14 +290,14 @@ public class ChessGame {
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        ChessGame chessGame = (ChessGame) o;
+        ChessGame chessGame = (ChessGame) obj;
         return Objects.equals(board, chessGame.board) && teamTurn == chessGame.teamTurn;
     }
 

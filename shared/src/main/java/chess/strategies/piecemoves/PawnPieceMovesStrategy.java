@@ -10,19 +10,19 @@ public class PawnPieceMovesStrategy implements PieceMovesStrategy {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ChessGame.TeamColor teamColor = board.getPiece(myPosition).getTeamColor();
+        TeamColor teamColor = board.getPiece(myPosition).getTeamColor();
         Collection<ChessMove> moves = new HashSet<>();
 
         int single =
-                myPosition.getRow() + ((teamColor == ChessGame.TeamColor.WHITE) ? 1 : -1); //Direction pawn is going
+                myPosition.getRow() + ((teamColor == TeamColor.WHITE) ? 1 : -1); //Direction pawn is going
 
         ChessPosition oneSpaceMove = new ChessPosition(single, myPosition.getColumn());
         if (board.getPiece(oneSpaceMove) == null) {
             moves.add(new ChessMove(myPosition, oneSpaceMove));
 
             //If it's still on the starting line, can move 2 spaces
-            if ((teamColor == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2) ||
-                    (teamColor == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7)) {
+            if ((teamColor == TeamColor.WHITE && myPosition.getRow() == 2) ||
+                    (teamColor == TeamColor.BLACK && myPosition.getRow() == 7)) {
                 ChessPosition twoSpaceMove =
                         new ChessPosition(2 * single - myPosition.getRow(), myPosition.getColumn());
                 if (board.getPiece(twoSpaceMove) == null) {
@@ -54,13 +54,13 @@ public class PawnPieceMovesStrategy implements PieceMovesStrategy {
             Collection<ChessMove> promotions = new HashSet<>();
             for (ChessMove move : moves) {
                 promotions.add(
-                        new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.QUEEN));
+                        new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.QUEEN));
                 promotions.add(
-                        new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.ROOK));
+                        new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.ROOK));
                 promotions.add(
-                        new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.BISHOP));
+                        new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.BISHOP));
                 promotions.add(
-                        new ChessMove(move.getStartPosition(), move.getEndPosition(), ChessPiece.PieceType.KNIGHT));
+                        new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.KNIGHT));
             }
             return promotions;
 

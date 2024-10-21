@@ -1,11 +1,11 @@
 package chess.factories.piecemoves;
 
-import chess.ChessPiece;
+import chess.PieceType;
 import util.BaseFactory;
 
 public class PieceMovesStrategyFactoryFactory extends BaseFactory<PieceMovesStrategyFactory<?>> {
 
-    public PieceMovesStrategyFactoryFactory(ChessPiece.PieceType type) {
+    public PieceMovesStrategyFactoryFactory(PieceType type) {
         super(switch (type) {
             case KING -> new KingPieceMovesStrategyFactory();
             case QUEEN -> new QueenPieceMovesStrategyFactory();

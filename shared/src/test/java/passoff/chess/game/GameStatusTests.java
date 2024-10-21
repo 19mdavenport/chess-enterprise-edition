@@ -1,6 +1,7 @@
 package passoff.chess.game;
 
 import chess.ChessGame;
+import chess.TeamColor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ public class GameStatusTests {
         var game = new ChessGame();
         var expectedBoard = defaultBoard();
         Assertions.assertEquals(expectedBoard, game.getBoard());
-        Assertions.assertEquals(ChessGame.TeamColor.WHITE, game.getTeamTurn());
+        Assertions.assertEquals(TeamColor.WHITE, game.getTeamTurn());
     }
 
     @Test
@@ -23,19 +24,19 @@ public class GameStatusTests {
     public void noGameStatuses() {
         var game = new ChessGame();
         game.setBoard(defaultBoard());
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(TeamColor.WHITE);
 
-        Assertions.assertFalse(game.isInCheck(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInCheck(TeamColor.BLACK),
                 "Black is not in check but isInCheck returned true");
-        Assertions.assertFalse(game.isInCheck(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheck(TeamColor.WHITE),
                 "White is not in check but isInCheck returned true");
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.BLACK),
                 "Black is not in checkmate but isInCheckmate returned true");
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.WHITE),
                 "White is not in checkmate but isInCheckmate returned true");
-        Assertions.assertFalse(game.isInStalemate(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInStalemate(TeamColor.BLACK),
                 "Black is not in stalemate but isInStalemate returned true");
-        Assertions.assertFalse(game.isInStalemate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInStalemate(TeamColor.WHITE),
                 "White is not in stalemate but isInStalemate returned true");
     }
 
@@ -55,9 +56,9 @@ public class GameStatusTests {
                 | | | | | | | | |
                 """));
 
-        Assertions.assertTrue(game.isInCheck(ChessGame.TeamColor.WHITE),
+        Assertions.assertTrue(game.isInCheck(TeamColor.WHITE),
                 "White is in check but isInCheck returned false");
-        Assertions.assertFalse(game.isInCheck(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInCheck(TeamColor.BLACK),
                 "Black is not in check but isInCheck returned true");
     }
 
@@ -77,9 +78,9 @@ public class GameStatusTests {
                 | | | | | | | | |
                 """));
 
-        Assertions.assertTrue(game.isInCheck(ChessGame.TeamColor.BLACK),
+        Assertions.assertTrue(game.isInCheck(TeamColor.BLACK),
                 "Black is in check but isInCheck returned false");
-        Assertions.assertFalse(game.isInCheck(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheck(TeamColor.WHITE),
                 "White is not in check but isInCheck returned true");
     }
 
@@ -99,11 +100,11 @@ public class GameStatusTests {
                 | | | | |n| | | |
                 | | | | | | | | |
                 """));
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(TeamColor.WHITE);
 
-        Assertions.assertTrue(game.isInCheckmate(ChessGame.TeamColor.WHITE),
+        Assertions.assertTrue(game.isInCheckmate(TeamColor.WHITE),
                 "White is in checkmate but isInCheckmate returned false");
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.BLACK),
                 "Black is not in checkmate but isInCheckmate returned true");
     }
 
@@ -122,11 +123,11 @@ public class GameStatusTests {
                 | | | | | | | | |
                 | | | |K| | | | |
                 """));
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
 
-        Assertions.assertTrue(game.isInCheckmate(ChessGame.TeamColor.BLACK),
+        Assertions.assertTrue(game.isInCheckmate(TeamColor.BLACK),
                 "Black is in checkmate but isInCheckmate returned false");
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.WHITE),
                 "White is not in checkmate but isInCheckmate returned true");
 
     }
@@ -146,11 +147,11 @@ public class GameStatusTests {
                 | | | | |n| | | |
                 |K| | | | | | | |
                 """));
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
 
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.BLACK),
                 "Black is not in checkmate but isInCheckmate returned true");
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.WHITE),
                 "White is not in checkmate but isInCheckmate returned true");
     }
 
@@ -170,11 +171,11 @@ public class GameStatusTests {
                 | | | | |n| | | |
                 |K| | | | | |R| |
                 """));
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
 
-        Assertions.assertTrue(game.isInCheckmate(ChessGame.TeamColor.BLACK),
+        Assertions.assertTrue(game.isInCheckmate(TeamColor.BLACK),
                 "Black is in checkmate but isInCheckmate returned false");
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.WHITE),
                 "White is not in checkmate but isInCheckmate returned true");
     }
 
@@ -194,11 +195,11 @@ public class GameStatusTests {
                 | | | | | | | | |
                 |K| | | | | | |R|
                 """));
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
 
-        Assertions.assertTrue(game.isInCheckmate(ChessGame.TeamColor.BLACK),
+        Assertions.assertTrue(game.isInCheckmate(TeamColor.BLACK),
                 "Black is in checkmate but isInCheckmate returned false");
-        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInCheckmate(TeamColor.WHITE),
                 "White is not in checkmate but isInCheckmate returned true");
     }
 
@@ -217,11 +218,11 @@ public class GameStatusTests {
                 | | | | | | | | |
                 | | | | |b| | | |
                 """));
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(TeamColor.WHITE);
 
-        Assertions.assertTrue(game.isInStalemate(ChessGame.TeamColor.WHITE),
+        Assertions.assertTrue(game.isInStalemate(TeamColor.WHITE),
                 "White is in a stalemate but isInStalemate returned false");
-        Assertions.assertFalse(game.isInStalemate(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInStalemate(TeamColor.BLACK),
                 "Black is not in a stalemate but isInStalemate returned true");
     }
 
@@ -239,11 +240,11 @@ public class GameStatusTests {
                 | | | | | | | |r|
                 |K| | | | | |r| |
                 """));
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(TeamColor.WHITE);
 
-        Assertions.assertFalse(game.isInStalemate(ChessGame.TeamColor.WHITE),
+        Assertions.assertFalse(game.isInStalemate(TeamColor.WHITE),
                 "White is not in a stalemate but isInStalemate returned true");
-        Assertions.assertFalse(game.isInStalemate(ChessGame.TeamColor.BLACK),
+        Assertions.assertFalse(game.isInStalemate(TeamColor.BLACK),
                 "Black is not in a stalemate but isInStalemate returned true");
     }
 }

@@ -1,7 +1,7 @@
 package websocket;
 
-import chess.ChessGame;
 import chess.InvalidMoveException;
+import chess.TeamColor;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
@@ -136,8 +136,8 @@ public class WebSocketHandler {
             throw new WebsocketException("Must include a move");
         }
         confirmGameStatus(game, username);
-        if ((game.game().getTeamTurn() == ChessGame.TeamColor.WHITE && !Objects.equals(game.whiteUsername(), username)) ||
-                (game.game().getTeamTurn() == ChessGame.TeamColor.BLACK &&
+        if ((game.game().getTeamTurn() == TeamColor.WHITE && !Objects.equals(game.whiteUsername(), username)) ||
+                (game.game().getTeamTurn() == TeamColor.BLACK &&
                         !Objects.equals(game.blackUsername(), username))) {
             throw new WebsocketException("It's not your turn");
         }

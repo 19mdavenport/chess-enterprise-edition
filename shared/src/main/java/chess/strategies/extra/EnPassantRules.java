@@ -19,7 +19,7 @@ public class EnPassantRules implements ExtraRuleset {
 
     public void moveMade(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getEndPosition());
-        if (piece.getPieceType() == ChessPiece.PieceType.PAWN &&
+        if (piece.getPieceType() == PieceType.PAWN &&
                 Math.abs(move.getStartPosition().getRow() - move.getEndPosition().getRow()) == 2) {
             enPassantPosition = move.getEndPosition();
         }
@@ -30,9 +30,9 @@ public class EnPassantRules implements ExtraRuleset {
 
 
     @Override
-    public boolean moveMatches(ChessMove move, ChessBoard board) {
+    public boolean isMoveMatch(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getStartPosition());
-        return piece.getPieceType() == ChessPiece.PieceType.PAWN &&
+        return piece.getPieceType() == PieceType.PAWN &&
                 !Objects.equals(move.getStartPosition().getColumn(), move.getEndPosition().getColumn()) &&
                 board.getPiece(move.getEndPosition()) == null;
     }
@@ -48,13 +48,13 @@ public class EnPassantRules implements ExtraRuleset {
 
         ChessPiece piece = board.getPiece(position);
 
-        if (piece == null || piece.getPieceType() != ChessPiece.PieceType.PAWN) {
+        if (piece == null || piece.getPieceType() != PieceType.PAWN) {
             return ret;
         }
 
         if (enPassantPosition.getRow() == position.getRow() &&
                 Math.abs(enPassantPosition.getColumn() - position.getColumn()) == 1) {
-            int row = position.getRow() + ((piece.getTeamColor() == ChessGame.TeamColor.WHITE) ? 1 : -1);
+            int row = position.getRow() + ((piece.getTeamColor() == TeamColor.WHITE) ? 1 : -1);
             ret.add(new ChessMove(position, new ChessPosition(row, enPassantPosition.getColumn())));
         }
 
@@ -64,7 +64,7 @@ public class EnPassantRules implements ExtraRuleset {
 
     public void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.getStartPosition());
-        if (enPassantPosition == null || piece.getPieceType() != ChessPiece.PieceType.PAWN ||
+        if (enPassantPosition == null || piece.getPieceType() != PieceType.PAWN ||
                 Objects.equals(move.getStartPosition().getColumn(), move.getEndPosition().getColumn()) ||
                 board.getPiece(move.getEndPosition()) != null ||
                 !Objects.equals(move.getStartPosition().getRow(), enPassantPosition.getRow()) ||
@@ -79,17 +79,15 @@ public class EnPassantRules implements ExtraRuleset {
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-
-        EnPassantRules that = (EnPassantRules) o;
-
-        return Objects.equals(enPassantPosition, that.enPassantPosition);
+        EnPassantRules obj1 = (EnPassantRules) obj;
+        return Objects.equals(enPassantPosition, obj1.enPassantPosition);
     }
 
 
@@ -104,8 +102,4 @@ public class EnPassantRules implements ExtraRuleset {
         return enPassantPosition != null ? enPassantPosition.toString() : "";
     }
 
-    @Override
-    public EnPassantRules clone() throws CloneNotSupportedException {
-        return (EnPassantRules) super.clone();
-    }
 }

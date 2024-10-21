@@ -5,6 +5,7 @@ import chess.factories.piecemoves.PieceMovesStrategyFactoryFactory;
 import chess.strategies.piecemoves.PieceMovesStrategy;
 
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  * Represents a single chess piece
@@ -14,29 +15,21 @@ import java.util.Collection;
  */
 public class ChessPiece {
 
-    private final ChessGame.TeamColor teamColor;
+    private final TeamColor teamColor;
 
     private final PieceType pieceType;
 
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
+    public ChessPiece(TeamColor pieceColor, PieceType type) {
         teamColor = pieceColor;
         pieceType = type;
     }
 
 
     /**
-     * The various different chess piece options
-     */
-    public enum PieceType {
-        KING, QUEEN, BISHOP, KNIGHT, ROOK, PAWN
-    }
-
-
-    /**
      * @return Which team this chess piece belongs to
      */
-    public ChessGame.TeamColor getTeamColor() {
+    public TeamColor getTeamColor() {
         return teamColor;
     }
 
@@ -65,14 +58,14 @@ public class ChessPiece {
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        ChessPiece o1 = (ChessPiece) o;
+        ChessPiece o1 = (ChessPiece) obj;
         return teamColor == o1.teamColor && pieceType == o1.pieceType;
     }
 
@@ -96,8 +89,8 @@ public class ChessPiece {
             case PAWN -> 'p';
         };
         return switch (teamColor) {
-            case WHITE -> String.valueOf(c).toUpperCase();
-            case BLACK -> String.valueOf(c).toLowerCase();
+            case WHITE -> String.valueOf(c).toUpperCase(Locale.ROOT);
+            case BLACK -> String.valueOf(c).toLowerCase(Locale.ROOT);
         };
     }
 

@@ -32,7 +32,7 @@ public class CastlingTests {
                 """);
         ChessGame game = new ChessGame();
         game.setBoard(board);
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(TeamColor.WHITE);
 
         //check that with nothing in way, king can castle
         ChessPosition kingPosition = new ChessPosition(1, 5);
@@ -69,7 +69,7 @@ public class CastlingTests {
                 |R| | | |K| | |R|
                 """);
         game.setBoard(board);
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(TeamColor.WHITE);
 
         //king side castle works correctly
         Assertions.assertDoesNotThrow(() -> game.makeMove(kingSide));
@@ -101,7 +101,7 @@ public class CastlingTests {
                 """);
         ChessGame game = new ChessGame();
         game.setBoard(board);
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
 
         //check that with nothing in way, king can castle
         ChessPosition kingPosition = new ChessPosition(8, 5);
@@ -139,7 +139,7 @@ public class CastlingTests {
                 |R| | | | | | | |
                 """);
         game.setBoard(board);
-        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+        game.setTeamTurn(TeamColor.BLACK);
 
         //king side castle works correctly
         Assertions.assertDoesNotThrow(() -> game.makeMove(kingSide));
@@ -171,7 +171,7 @@ public class CastlingTests {
                 """);
         ChessGame game = new ChessGame();
         game.setBoard(board);
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(TeamColor.WHITE);
 
         //check that with nothing in way, king can castle
         ChessPosition kingPosition = new ChessPosition(1, 5);
@@ -228,7 +228,7 @@ public class CastlingTests {
                 """);
         ChessGame game = new ChessGame();
         game.setBoard(board);
-        game.setTeamTurn(ChessGame.TeamColor.WHITE);
+        game.setTeamTurn(TeamColor.WHITE);
 
         //move left rook
         game.makeMove(new ChessMove(new ChessPosition(1, 1), new ChessPosition(1, 4), null));

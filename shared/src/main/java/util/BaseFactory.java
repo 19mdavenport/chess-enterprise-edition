@@ -1,6 +1,7 @@
 package util;
 
-public class BaseFactory<T> implements Factory<T> {
+@SuppressWarnings("AbstractClassWithoutAbstractMethods")
+public abstract class BaseFactory<T> implements Factory<T> {
     private final T t;
 
     protected BaseFactory(T t) {
