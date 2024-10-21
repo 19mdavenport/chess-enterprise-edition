@@ -1,4 +1,4 @@
-package chess.ruleset.piece;
+package chess.strategies.piecemoves;
 
 import chess.ChessBoard;
 import chess.ChessMove;
@@ -8,7 +8,7 @@ import chess.ChessPosition;
 import java.util.Collection;
 import java.util.HashSet;
 
-public abstract class LineMoveRuleset implements PieceRuleset {
+public abstract class LineMovePieceMovesStrategy implements PieceMovesStrategy {
 
     protected Collection<ChessMove> lineMove(ChessBoard board, ChessPosition myPosition, int vertical, int horizontal) {
         Collection<ChessMove> moves = new HashSet<>();

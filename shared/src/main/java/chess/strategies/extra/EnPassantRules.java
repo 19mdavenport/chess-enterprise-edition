@@ -1,4 +1,4 @@
-package chess.ruleset.extra;
+package chess.strategies.extra;
 
 import chess.*;
 

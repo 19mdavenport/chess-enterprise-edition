@@ -1,4 +1,4 @@
-package chess.ruleset.piece;
+package chess.strategies.piecemoves;
 
 
 import chess.ChessBoard;
@@ -8,7 +8,7 @@ import chess.ChessPosition;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class RookRuleset extends LineMoveRuleset {
+public class RookPieceMovesStrategy extends LineMovePieceMovesStrategy {
 
     @Override
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {

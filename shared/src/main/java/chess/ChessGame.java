@@ -1,8 +1,8 @@
 package chess;
 
-import chess.ruleset.extra.CastlingRules;
-import chess.ruleset.extra.EnPassantRules;
-import chess.ruleset.extra.ExtraRuleset;
+import chess.strategies.extra.CastlingRules;
+import chess.strategies.extra.EnPassantRules;
+import chess.strategies.extra.ExtraRuleset;
 
 import java.util.ArrayList;
 import java.util.Collection;

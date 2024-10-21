@@ -1,11 +1,11 @@
-package chess.ruleset.piece;
+package chess.strategies.piecemoves;
 
 import chess.*;
 
 import java.util.Collection;
 import java.util.HashSet;
 
-public class PawnRuleset implements PieceRuleset {
+public class PawnPieceMovesStrategy implements PieceMovesStrategy {
 
 
     @Override

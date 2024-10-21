@@ -1,6 +1,6 @@
 package chess;
 
-import chess.ruleset.piece.*;
+import chess.strategies.piecemoves.*;
 
 import java.util.Collection;
 
@@ -56,12 +56,12 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         return (switch (board.getPiece(myPosition).pieceType) {
-            case KING -> new KingRuleset();
-            case QUEEN -> new QueenRuleset();
-            case BISHOP -> new BishopRuleset();
-            case KNIGHT -> new KnightRuleset();
-            case ROOK -> new RookRuleset();
-            case PAWN -> new PawnRuleset();
+            case KING -> new KingPieceMovesStrategy();
+            case QUEEN -> new QueenPieceMovesStrategy();
+            case BISHOP -> new BishopPieceMovesStrategy();
+            case KNIGHT -> new KnightPieceMovesStrategy();
+            case ROOK -> new RookPieceMovesStrategy();
+            case PAWN -> new PawnPieceMovesStrategy();
         }).pieceMoves(board, myPosition);
     }
 
