@@ -1,8 +1,10 @@
 package chess;
 
+import chess.factories.performmove.MovePerformanceStrategyFactory;
 import chess.strategies.extra.CastlingRules;
 import chess.strategies.extra.EnPassantRules;
 import chess.strategies.extra.ExtraRuleset;
+import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
 import java.util.List;
@@ -244,19 +246,9 @@ public class ChessGame {
     }
 
     private void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException {
-        for (ExtraRuleset extraRuleset : extraRules) {
-            if (extraRuleset.isMoveMatch(move, board)) {
-                extraRuleset.performMove(move, board);
-                return;
-            }
-        }
-
-
-        if (move.getPromotionPiece() == null) {
-
-        } else { //Promotions
-
-        }
+        MovePerformanceStrategyFactory factory = new MovePerformanceStrategyFactory(extraRules, move, board);
+        MovePerformanceStrategy strategy = factory.get();
+        strategy.performMove(move, board);
     }
 
     private boolean isTeamTrapped(TeamColor teamColor) {
