@@ -1,9 +1,9 @@
-package chess.strategies.extrarules.castling;
+package chess.extrarules.castling;
 
 import chess.*;
 import chess.observers.BoardSetObserver;
 import chess.observers.MoveMadeObserver;
-import chess.strategies.extrarules.ExtraRuleset;
+import chess.extrarules.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Arrays;

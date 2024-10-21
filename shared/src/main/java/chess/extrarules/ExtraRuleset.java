@@ -1,4 +1,4 @@
-package chess.strategies.extrarules;
+package chess.extrarules;
 
 import chess.ChessBoard;
 import chess.ChessMove;

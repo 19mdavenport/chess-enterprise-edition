@@ -1,6 +1,6 @@
 package serialize;
 
-import chess.strategies.extrarules.ExtraRuleset;
+import chess.extrarules.ExtraRuleset;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.TypeAdapter;

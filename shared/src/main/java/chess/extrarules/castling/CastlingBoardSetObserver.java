@@ -1,4 +1,4 @@
-package chess.strategies.extrarules.castling;
+package chess.extrarules.castling;
 
 import chess.ChessBoard;
 import chess.ChessPiece;

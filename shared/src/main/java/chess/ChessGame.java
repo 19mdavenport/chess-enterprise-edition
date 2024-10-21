@@ -1,9 +1,9 @@
 package chess;
 
 import chess.factories.performmove.MovePerformanceStrategyFactory;
-import chess.strategies.extrarules.ExtraRuleset;
-import chess.strategies.extrarules.castling.CastlingRules;
-import chess.strategies.extrarules.enpassant.EnPassantRules;
+import chess.extrarules.ExtraRuleset;
+import chess.extrarules.castling.CastlingRules;
+import chess.extrarules.enpassant.EnPassantRules;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
