@@ -1,6 +1,8 @@
 package chess.strategies.extra;
 
 import chess.*;
+import chess.strategies.performmove.extra.CastlingMovePerformanceStrategy;
+import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,33 +18,17 @@ public class CastlingRules implements ExtraRuleset {
         Arrays.fill(castlingOptions, true);
     }
 
-
-    public void setBoard(ChessBoard board) {
-        ChessPiece whiteKing = board.getPiece(new ChessPosition(1, 5));
-        ChessPiece whiteRookK = board.getPiece(new ChessPosition(1, 8));
-        ChessPiece whiteRookQ = board.getPiece(new ChessPosition(1, 1));
-
-        if (whiteKing == null || whiteKing.getPieceType() != PieceType.KING) {
-            castlingOptions[0] = false;
-            castlingOptions[1] = false;
-        } else {
-            castlingOptions[0] = (whiteRookK != null && whiteRookK.getPieceType() == PieceType.ROOK);
-            castlingOptions[1] = (whiteRookQ != null && whiteRookQ.getPieceType() == PieceType.ROOK);
-        }
-
-        ChessPiece blackKing = board.getPiece(new ChessPosition(8, 5));
-        ChessPiece blackRookK = board.getPiece(new ChessPosition(8, 8));
-        ChessPiece blackRookQ = board.getPiece(new ChessPosition(8, 1));
-
-        if (blackKing == null || blackKing.getPieceType() != PieceType.KING) {
-            castlingOptions[2] = false;
-            castlingOptions[3] = false;
-        } else {
-            castlingOptions[2] = (blackRookK != null && blackRookK.getPieceType() == PieceType.ROOK);
-            castlingOptions[3] = (blackRookQ != null && blackRookQ.getPieceType() == PieceType.ROOK);
-        }
+    @Override
+    public MovePerformanceStrategy getMovePerformanceStrategy() {
+        return new CastlingMovePerformanceStrategy();
     }
 
+    @Override
+    public boolean isMoveMatch(ChessMove move, ChessBoard board) {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        return (piece.getPieceType() == PieceType.KING &&
+                Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) == 2);
+    }
 
     public void moveMade(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getEndPosition());
@@ -71,14 +57,31 @@ public class CastlingRules implements ExtraRuleset {
         }
     }
 
+    public void setBoard(ChessBoard board) {
+        ChessPiece whiteKing = board.getPiece(new ChessPosition(1, 5));
+        ChessPiece whiteRookK = board.getPiece(new ChessPosition(1, 8));
+        ChessPiece whiteRookQ = board.getPiece(new ChessPosition(1, 1));
 
-    @Override
-    public boolean isMoveMatch(ChessMove move, ChessBoard board) {
-        ChessPiece piece = board.getPiece(move.getStartPosition());
-        return (piece.getPieceType() == PieceType.KING &&
-                Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) == 2);
+        if (whiteKing == null || whiteKing.getPieceType() != PieceType.KING) {
+            castlingOptions[0] = false;
+            castlingOptions[1] = false;
+        } else {
+            castlingOptions[0] = (whiteRookK != null && whiteRookK.getPieceType() == PieceType.ROOK);
+            castlingOptions[1] = (whiteRookQ != null && whiteRookQ.getPieceType() == PieceType.ROOK);
+        }
+
+        ChessPiece blackKing = board.getPiece(new ChessPosition(8, 5));
+        ChessPiece blackRookK = board.getPiece(new ChessPosition(8, 8));
+        ChessPiece blackRookQ = board.getPiece(new ChessPosition(8, 1));
+
+        if (blackKing == null || blackKing.getPieceType() != PieceType.KING) {
+            castlingOptions[2] = false;
+            castlingOptions[3] = false;
+        } else {
+            castlingOptions[2] = (blackRookK != null && blackRookK.getPieceType() == PieceType.ROOK);
+            castlingOptions[3] = (blackRookQ != null && blackRookQ.getPieceType() == PieceType.ROOK);
+        }
     }
-
 
     public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition position) {
         Collection<ChessMove> ret = new HashSet<>();
@@ -104,28 +107,6 @@ public class CastlingRules implements ExtraRuleset {
 
         return ret;
     }
-
-
-    public void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException {
-        if (move.getPromotionPiece() != null ||
-                board.getPiece(move.getStartPosition()).getPieceType() != PieceType.KING ||
-                Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) != 2) {
-            throw new InvalidMoveException("Not a valid castling move");
-        }
-        int oldColumn = (move.getStartPosition().getColumn() > move.getEndPosition().getColumn()) ? 1 : 8;
-        ChessPosition oldPosition = new ChessPosition(move.getEndPosition().getRow(), oldColumn);
-
-        ChessPosition newPosition = new ChessPosition(move.getEndPosition().getRow(),
-                (move.getStartPosition().getColumn() + move.getEndPosition().getColumn()) / 2);
-
-        board.addPiece(newPosition, board.getPiece(oldPosition));
-        board.addPiece(oldPosition, null);
-
-        ChessPiece king = board.getPiece(move.getStartPosition());
-        board.addPiece(move.getStartPosition(), null);
-        board.addPiece(move.getEndPosition(), king);
-    }
-
 
     private Optional<ChessMove> singleCastlingMove(ChessBoard board, TeamColor color, boolean kingSide) {
         if (ChessGame.isInCheck(color, board)) {
@@ -153,7 +134,7 @@ public class CastlingRules implements ExtraRuleset {
         ChessMove out = new ChessMove(orig, end);
         ChessBoard outBoard = new ChessBoard(board);
         try {
-            performMove(out, outBoard);
+            getMovePerformanceStrategy().performMove(out, outBoard);
         } catch (InvalidMoveException e) {
             return Optional.empty();
         }
@@ -182,11 +163,8 @@ public class CastlingRules implements ExtraRuleset {
 
     @Override
     public String toString() {
-        return "%s%s%s%s".formatted(
-                castlingOptions[0] ? 'K' : '-',
-                castlingOptions[1] ? 'Q' : '-',
-                castlingOptions[2] ? 'k' : '-',
-                castlingOptions[3] ? 'q' : '-');
+        return "%s%s%s%s".formatted(castlingOptions[0] ? 'K' : '-', castlingOptions[1] ? 'Q' : '-',
+                castlingOptions[2] ? 'k' : '-', castlingOptions[3] ? 'q' : '-');
     }
 
 }

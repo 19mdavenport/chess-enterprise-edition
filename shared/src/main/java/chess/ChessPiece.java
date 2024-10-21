@@ -15,24 +15,15 @@ import java.util.Locale;
  */
 public class ChessPiece {
 
-    private final TeamColor teamColor;
-
     private final PieceType pieceType;
+
+    private final TeamColor teamColor;
 
 
     public ChessPiece(TeamColor pieceColor, PieceType type) {
         teamColor = pieceColor;
         pieceType = type;
     }
-
-
-    /**
-     * @return Which team this chess piece belongs to
-     */
-    public TeamColor getTeamColor() {
-        return teamColor;
-    }
-
 
     /**
      * @return which type of chess piece this piece is
@@ -41,21 +32,19 @@ public class ChessPiece {
         return pieceType;
     }
 
-
     /**
-     * Calculates all the positions a chess piece can move to
-     * Does not take into account moves that are illegal due to leaving the king in
-     * danger
-     *
-     * @return Collection of valid moves
+     * @return Which team this chess piece belongs to
      */
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        PieceMovesStrategyFactoryFactory strategyFactoryFactory = new PieceMovesStrategyFactoryFactory(pieceType);
-        PieceMovesStrategyFactory<?> strategyFactory = strategyFactoryFactory.get();
-        PieceMovesStrategy pieceMovesStrategy = strategyFactory.get();
-        return pieceMovesStrategy.pieceMoves(board, myPosition);
+    public TeamColor getTeamColor() {
+        return teamColor;
     }
 
+    @Override
+    public int hashCode() {
+        int result = teamColor != null ? teamColor.hashCode() : 0;
+        result = 31 * result + (pieceType != null ? pieceType.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -68,15 +57,6 @@ public class ChessPiece {
         ChessPiece o1 = (ChessPiece) obj;
         return teamColor == o1.teamColor && pieceType == o1.pieceType;
     }
-
-
-    @Override
-    public int hashCode() {
-        int result = teamColor != null ? teamColor.hashCode() : 0;
-        result = 31 * result + (pieceType != null ? pieceType.hashCode() : 0);
-        return result;
-    }
-
 
     @Override
     public String toString() {
@@ -92,6 +72,20 @@ public class ChessPiece {
             case WHITE -> String.valueOf(c).toUpperCase(Locale.ROOT);
             case BLACK -> String.valueOf(c).toLowerCase(Locale.ROOT);
         };
+    }
+
+    /**
+     * Calculates all the positions a chess piece can move to
+     * Does not take into account moves that are illegal due to leaving the king in
+     * danger
+     *
+     * @return Collection of valid moves
+     */
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        PieceMovesStrategyFactoryFactory strategyFactoryFactory = new PieceMovesStrategyFactoryFactory(pieceType);
+        PieceMovesStrategyFactory<?> strategyFactory = strategyFactoryFactory.get();
+        PieceMovesStrategy pieceMovesStrategy = strategyFactory.get();
+        return pieceMovesStrategy.pieceMoves(board, myPosition);
     }
 
 }

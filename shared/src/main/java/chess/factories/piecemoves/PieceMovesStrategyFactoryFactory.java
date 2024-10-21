@@ -16,5 +16,5 @@ public class PieceMovesStrategyFactoryFactory extends BaseFactory<PieceMovesStra
         });
     }
 
-    
+
 }

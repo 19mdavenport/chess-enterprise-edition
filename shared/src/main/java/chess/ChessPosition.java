@@ -8,9 +8,9 @@ package chess;
  */
 public class ChessPosition {
 
-    private final int row;
-
     private final int col;
+
+    private final int row;
 
 
     /**
@@ -27,16 +27,6 @@ public class ChessPosition {
         this.col = col;
     }
 
-
-    /**
-     * @return which row this position is in
-     * 1 codes for the bottom row
-     */
-    public int getRow() {
-        return row;
-    }
-
-
     /**
      * @return which column this position is in
      * 1 codes for the left row
@@ -45,6 +35,13 @@ public class ChessPosition {
         return col;
     }
 
+    /**
+     * @return which row this position is in
+     * 1 codes for the bottom row
+     */
+    public int getRow() {
+        return row;
+    }
 
     @Override
     public int hashCode() {

@@ -1,6 +1,8 @@
 package chess.strategies.extra;
 
 import chess.*;
+import chess.strategies.performmove.extra.EnPassantMovePerformanceStrategy;
+import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -10,24 +12,10 @@ public class EnPassantRules implements ExtraRuleset {
 
     private ChessPosition enPassantPosition = null;
 
-
     @Override
-    public void setBoard(ChessBoard board) {
-        enPassantPosition = null;
+    public MovePerformanceStrategy getMovePerformanceStrategy() {
+        return new EnPassantMovePerformanceStrategy(enPassantPosition);
     }
-
-
-    public void moveMade(ChessMove move, ChessBoard board) {
-        ChessPiece piece = board.getPiece(move.getEndPosition());
-        if (piece.getPieceType() == PieceType.PAWN &&
-                Math.abs(move.getStartPosition().getRow() - move.getEndPosition().getRow()) == 2) {
-            enPassantPosition = move.getEndPosition();
-        }
-        else {
-            enPassantPosition = null;
-        }
-    }
-
 
     @Override
     public boolean isMoveMatch(ChessMove move, ChessBoard board) {
@@ -37,6 +25,20 @@ public class EnPassantRules implements ExtraRuleset {
                 board.getPiece(move.getEndPosition()) == null;
     }
 
+    public void moveMade(ChessMove move, ChessBoard board) {
+        ChessPiece piece = board.getPiece(move.getEndPosition());
+        if (piece.getPieceType() == PieceType.PAWN &&
+                Math.abs(move.getStartPosition().getRow() - move.getEndPosition().getRow()) == 2) {
+            enPassantPosition = move.getEndPosition();
+        } else {
+            enPassantPosition = null;
+        }
+    }
+
+    @Override
+    public void setBoard(ChessBoard board) {
+        enPassantPosition = null;
+    }
 
     @Override
     public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition position) {
@@ -61,22 +63,10 @@ public class EnPassantRules implements ExtraRuleset {
         return ret;
     }
 
-
-    public void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException {
-        ChessPiece piece = board.getPiece(move.getStartPosition());
-        if (enPassantPosition == null || piece.getPieceType() != PieceType.PAWN ||
-                Objects.equals(move.getStartPosition().getColumn(), move.getEndPosition().getColumn()) ||
-                board.getPiece(move.getEndPosition()) != null ||
-                !Objects.equals(move.getStartPosition().getRow(), enPassantPosition.getRow()) ||
-                !Objects.equals(move.getEndPosition().getColumn(), enPassantPosition.getColumn())) {
-            throw new InvalidMoveException("Invalid en passant move");
-        }
-        board.addPiece(enPassantPosition, null);
-        ChessPiece pawn = board.getPiece(move.getStartPosition());
-        board.addPiece(move.getStartPosition(), null);
-        board.addPiece(move.getEndPosition(), pawn);
+    @Override
+    public int hashCode() {
+        return enPassantPosition != null ? enPassantPosition.hashCode() : 0;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -89,13 +79,6 @@ public class EnPassantRules implements ExtraRuleset {
         EnPassantRules obj1 = (EnPassantRules) obj;
         return Objects.equals(enPassantPosition, obj1.enPassantPosition);
     }
-
-
-    @Override
-    public int hashCode() {
-        return enPassantPosition != null ? enPassantPosition.hashCode() : 0;
-    }
-
 
     @Override
     public String toString() {

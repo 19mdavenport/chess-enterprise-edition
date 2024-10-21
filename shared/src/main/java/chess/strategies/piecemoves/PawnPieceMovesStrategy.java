@@ -13,8 +13,7 @@ public class PawnPieceMovesStrategy implements PieceMovesStrategy {
         TeamColor teamColor = board.getPiece(myPosition).getTeamColor();
         Collection<ChessMove> moves = new HashSet<>();
 
-        int single =
-                myPosition.getRow() + ((teamColor == TeamColor.WHITE) ? 1 : -1); //Direction pawn is going
+        int single = myPosition.getRow() + ((teamColor == TeamColor.WHITE) ? 1 : -1); //Direction pawn is going
 
         ChessPosition oneSpaceMove = new ChessPosition(single, myPosition.getColumn());
         if (board.getPiece(oneSpaceMove) == null) {
@@ -53,14 +52,10 @@ public class PawnPieceMovesStrategy implements PieceMovesStrategy {
             //Go through all the moves, replace moves that end on edge with promotion moves
             Collection<ChessMove> promotions = new HashSet<>();
             for (ChessMove move : moves) {
-                promotions.add(
-                        new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.QUEEN));
-                promotions.add(
-                        new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.ROOK));
-                promotions.add(
-                        new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.BISHOP));
-                promotions.add(
-                        new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.KNIGHT));
+                promotions.add(new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.QUEEN));
+                promotions.add(new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.ROOK));
+                promotions.add(new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.BISHOP));
+                promotions.add(new ChessMove(move.getStartPosition(), move.getEndPosition(), PieceType.KNIGHT));
             }
             return promotions;
 
