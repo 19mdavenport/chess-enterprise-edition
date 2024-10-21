@@ -1,9 +1,9 @@
 package util;
 
-public abstract class AbstractFactory<T> implements Factory<T> {
+public class BaseFactory<T> implements Factory<T> {
     private final T t;
 
-    protected AbstractFactory(T t) {
+    protected BaseFactory(T t) {
         this.t = t;
     }
 

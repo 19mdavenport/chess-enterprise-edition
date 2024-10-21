@@ -1,9 +1,9 @@
 package chess.factories.piecemoves;
 
 import chess.strategies.piecemoves.QueenPieceMovesStrategy;
-import util.AbstractFactory;
+import util.BaseFactory;
 
-public class QueenPieceMovesStrategyFactory extends AbstractFactory<QueenPieceMovesStrategy> {
+public class QueenPieceMovesStrategyFactory extends BaseFactory<QueenPieceMovesStrategy> {
 
     public QueenPieceMovesStrategyFactory() {
         super(new QueenPieceMovesStrategy());
