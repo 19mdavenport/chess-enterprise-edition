@@ -1,6 +1,8 @@
 package chess;
 
 import chess.factories.performmove.MovePerformanceStrategyFactory;
+import chess.observers.BoardSetObserver;
+import chess.observers.MoveMadeObserver;
 import chess.strategies.extra.CastlingRules;
 import chess.strategies.extra.EnPassantRules;
 import chess.strategies.extra.ExtraRuleset;
@@ -51,7 +53,7 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         this.board = board;
-        for (ExtraRuleset extraRuleset : extraRules) {
+        for (BoardSetObserver extraRuleset : extraRules) {
             extraRuleset.setBoard(board);
         }
     }
@@ -159,7 +161,7 @@ public class ChessGame {
 
         performMove(move, board);
 
-        for (ExtraRuleset extraRuleset : extraRules) {
+        for (MoveMadeObserver extraRuleset : extraRules) {
             extraRuleset.moveMade(move, board);
         }
 
