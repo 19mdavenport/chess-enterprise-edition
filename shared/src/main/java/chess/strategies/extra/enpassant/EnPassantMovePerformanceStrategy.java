@@ -1,25 +1,32 @@
-package chess.strategies.performmove.extra;
+package chess.strategies.extra.enpassant;
 
 import chess.*;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Objects;
 
-public record EnPassantMovePerformanceStrategy(ChessPosition enPassantPosition) implements MovePerformanceStrategy {
+public class EnPassantMovePerformanceStrategy implements MovePerformanceStrategy {
+    private final EnPassantRules rules;
+
+    public EnPassantMovePerformanceStrategy(EnPassantRules rules) {
+        this.rules = rules;
+    }
 
     @Override
     public void performMove(ChessMove move, ChessBoard board) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.getStartPosition());
-        if (enPassantPosition == null || piece.getPieceType() != PieceType.PAWN ||
+        if (rules.getEnPassantPosition() == null || piece.getPieceType() != PieceType.PAWN ||
                 Objects.equals(move.getStartPosition().getColumn(), move.getEndPosition().getColumn()) ||
                 board.getPiece(move.getEndPosition()) != null ||
-                !Objects.equals(move.getStartPosition().getRow(), enPassantPosition.getRow()) ||
-                !Objects.equals(move.getEndPosition().getColumn(), enPassantPosition.getColumn())) {
+                !Objects.equals(move.getStartPosition().getRow(), rules.getEnPassantPosition().getRow()) ||
+                !Objects.equals(move.getEndPosition().getColumn(), rules.getEnPassantPosition().getColumn())) {
             throw new InvalidMoveException("Invalid en passant move");
         }
-        board.addPiece(enPassantPosition, null);
+        board.addPiece(rules.getEnPassantPosition(), null);
         ChessPiece pawn = board.getPiece(move.getStartPosition());
         board.addPiece(move.getStartPosition(), null);
         board.addPiece(move.getEndPosition(), pawn);
     }
+
+
 }

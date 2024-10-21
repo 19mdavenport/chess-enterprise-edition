@@ -1,7 +1,7 @@
-package chess.strategies.extra;
+package chess.strategies.extra.enpassant;
 
 import chess.*;
-import chess.strategies.performmove.extra.EnPassantMovePerformanceStrategy;
+import chess.strategies.extra.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
@@ -12,9 +12,13 @@ public class EnPassantRules implements ExtraRuleset {
 
     private ChessPosition enPassantPosition = null;
 
+    ChessPosition getEnPassantPosition() {
+        return enPassantPosition;
+    }
+
     @Override
     public MovePerformanceStrategy getMovePerformanceStrategy() {
-        return new EnPassantMovePerformanceStrategy(enPassantPosition);
+        return new EnPassantMovePerformanceStrategy(this);
     }
 
     @Override

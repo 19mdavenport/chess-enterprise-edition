@@ -1,7 +1,7 @@
-package chess.strategies.extra;
+package chess.strategies.extra.castling;
 
 import chess.*;
-import chess.strategies.performmove.extra.CastlingMovePerformanceStrategy;
+import chess.strategies.extra.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Arrays;

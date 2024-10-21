@@ -3,8 +3,8 @@ package chess;
 import chess.factories.performmove.MovePerformanceStrategyFactory;
 import chess.observers.BoardSetObserver;
 import chess.observers.MoveMadeObserver;
-import chess.strategies.extra.CastlingRules;
-import chess.strategies.extra.EnPassantRules;
+import chess.strategies.extra.castling.CastlingRules;
+import chess.strategies.extra.enpassant.EnPassantRules;
 import chess.strategies.extra.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
