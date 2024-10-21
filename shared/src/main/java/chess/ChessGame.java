@@ -1,11 +1,10 @@
 package chess;
 
 import chess.factories.performmove.MovePerformanceStrategyFactory;
-import chess.observers.BoardSetObserver;
 import chess.observers.MoveMadeObserver;
-import chess.strategies.extra.castling.CastlingRules;
-import chess.strategies.extra.enpassant.EnPassantRules;
-import chess.strategies.extra.ExtraRuleset;
+import chess.strategies.extrarules.castling.CastlingRules;
+import chess.strategies.extrarules.enpassant.EnPassantRules;
+import chess.strategies.extrarules.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
@@ -53,8 +52,8 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         this.board = board;
-        for (BoardSetObserver extraRuleset : extraRules) {
-            extraRuleset.setBoard(board);
+        for (ExtraRuleset extraRuleset : extraRules) {
+            extraRuleset.getBoardSetObserver().setBoard(board);
         }
     }
 

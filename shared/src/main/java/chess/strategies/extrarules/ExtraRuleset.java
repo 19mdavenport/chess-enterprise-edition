@@ -1,4 +1,4 @@
-package chess.strategies.extra;
+package chess.strategies.extrarules;
 
 import chess.ChessBoard;
 import chess.ChessMove;
@@ -9,8 +9,10 @@ import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
 
-public interface ExtraRuleset extends MoveMadeObserver, BoardSetObserver {
+public interface ExtraRuleset extends MoveMadeObserver {
     MovePerformanceStrategy getMovePerformanceStrategy();
+
+    BoardSetObserver getBoardSetObserver();
 
     boolean isMoveMatch(ChessMove move, ChessBoard board);
 

@@ -2,7 +2,7 @@ package chess.factories.performmove;
 
 import chess.ChessBoard;
 import chess.ChessMove;
-import chess.strategies.extra.ExtraRuleset;
+import chess.strategies.extrarules.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 import chess.strategies.performmove.NormalMovePerformanceStrategy;
 import chess.strategies.performmove.PromotionMovePerformanceStrategy;

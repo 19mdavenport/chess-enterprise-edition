@@ -1,7 +1,8 @@
-package chess.strategies.extra.enpassant;
+package chess.strategies.extrarules.enpassant;
 
 import chess.*;
-import chess.strategies.extra.ExtraRuleset;
+import chess.observers.BoardSetObserver;
+import chess.strategies.extrarules.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
@@ -16,9 +17,18 @@ public class EnPassantRules implements ExtraRuleset {
         return enPassantPosition;
     }
 
+    void setEnPassantPosition(ChessPosition enPassantPosition) {
+        this.enPassantPosition = enPassantPosition;
+    }
+
     @Override
     public MovePerformanceStrategy getMovePerformanceStrategy() {
         return new EnPassantMovePerformanceStrategy(this);
+    }
+
+    @Override
+    public BoardSetObserver getBoardSetObserver() {
+        return new EnPassantBoardSetObserver(this);
     }
 
     @Override
@@ -39,10 +49,6 @@ public class EnPassantRules implements ExtraRuleset {
         }
     }
 
-    @Override
-    public void setBoard(ChessBoard board) {
-        enPassantPosition = null;
-    }
 
     @Override
     public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition position) {

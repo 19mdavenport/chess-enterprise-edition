@@ -1,4 +1,4 @@
-package chess.strategies.extra.castling;
+package chess.strategies.extrarules.castling;
 
 import chess.*;
 import chess.strategies.performmove.MovePerformanceStrategy;

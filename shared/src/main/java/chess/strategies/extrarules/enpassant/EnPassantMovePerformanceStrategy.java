@@ -1,4 +1,4 @@
-package chess.strategies.extra.enpassant;
+package chess.strategies.extrarules.enpassant;
 
 import chess.*;
 import chess.strategies.performmove.MovePerformanceStrategy;

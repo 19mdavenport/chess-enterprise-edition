@@ -1,7 +1,8 @@
-package chess.strategies.extra.castling;
+package chess.strategies.extrarules.castling;
 
 import chess.*;
-import chess.strategies.extra.ExtraRuleset;
+import chess.observers.BoardSetObserver;
+import chess.strategies.extrarules.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Arrays;
@@ -11,16 +12,29 @@ import java.util.Optional;
 
 public class CastlingRules implements ExtraRuleset {
 
-    private final boolean[] castlingOptions;
+    private boolean[] castlingOptions;
 
     public CastlingRules() {
         castlingOptions = new boolean[4];
         Arrays.fill(castlingOptions, true);
     }
 
+    boolean[] getCastlingOptions() {
+        return castlingOptions.clone();
+    }
+
+    void setCastlingOptions(boolean[] castlingOptions) {
+        this.castlingOptions = castlingOptions.clone();
+    }
+
     @Override
     public MovePerformanceStrategy getMovePerformanceStrategy() {
         return new CastlingMovePerformanceStrategy();
+    }
+
+    @Override
+    public BoardSetObserver getBoardSetObserver() {
+        return new CastlingBoardSetObserver(this);
     }
 
     @Override
@@ -58,29 +72,7 @@ public class CastlingRules implements ExtraRuleset {
     }
 
     public void setBoard(ChessBoard board) {
-        ChessPiece whiteKing = board.getPiece(new ChessPosition(1, 5));
-        ChessPiece whiteRookK = board.getPiece(new ChessPosition(1, 8));
-        ChessPiece whiteRookQ = board.getPiece(new ChessPosition(1, 1));
 
-        if (whiteKing == null || whiteKing.getPieceType() != PieceType.KING) {
-            castlingOptions[0] = false;
-            castlingOptions[1] = false;
-        } else {
-            castlingOptions[0] = (whiteRookK != null && whiteRookK.getPieceType() == PieceType.ROOK);
-            castlingOptions[1] = (whiteRookQ != null && whiteRookQ.getPieceType() == PieceType.ROOK);
-        }
-
-        ChessPiece blackKing = board.getPiece(new ChessPosition(8, 5));
-        ChessPiece blackRookK = board.getPiece(new ChessPosition(8, 8));
-        ChessPiece blackRookQ = board.getPiece(new ChessPosition(8, 1));
-
-        if (blackKing == null || blackKing.getPieceType() != PieceType.KING) {
-            castlingOptions[2] = false;
-            castlingOptions[3] = false;
-        } else {
-            castlingOptions[2] = (blackRookK != null && blackRookK.getPieceType() == PieceType.ROOK);
-            castlingOptions[3] = (blackRookQ != null && blackRookQ.getPieceType() == PieceType.ROOK);
-        }
     }
 
     public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition position) {
