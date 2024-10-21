@@ -2,6 +2,7 @@ package chess.strategies.extrarules.enpassant;
 
 import chess.*;
 import chess.observers.BoardSetObserver;
+import chess.observers.MoveMadeObserver;
 import chess.strategies.extrarules.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
@@ -32,21 +33,16 @@ public class EnPassantRules implements ExtraRuleset {
     }
 
     @Override
+    public MoveMadeObserver getMoveMadeObserver() {
+        return new EnPassantMoveMadeObserver(this);
+    }
+
+    @Override
     public boolean isMoveMatch(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getStartPosition());
         return piece.getPieceType() == PieceType.PAWN &&
                 !Objects.equals(move.getStartPosition().getColumn(), move.getEndPosition().getColumn()) &&
                 board.getPiece(move.getEndPosition()) == null;
-    }
-
-    public void moveMade(ChessMove move, ChessBoard board) {
-        ChessPiece piece = board.getPiece(move.getEndPosition());
-        if (piece.getPieceType() == PieceType.PAWN &&
-                Math.abs(move.getStartPosition().getRow() - move.getEndPosition().getRow()) == 2) {
-            enPassantPosition = move.getEndPosition();
-        } else {
-            enPassantPosition = null;
-        }
     }
 
 

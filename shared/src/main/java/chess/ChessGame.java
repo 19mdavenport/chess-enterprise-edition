@@ -1,10 +1,9 @@
 package chess;
 
 import chess.factories.performmove.MovePerformanceStrategyFactory;
-import chess.observers.MoveMadeObserver;
+import chess.strategies.extrarules.ExtraRuleset;
 import chess.strategies.extrarules.castling.CastlingRules;
 import chess.strategies.extrarules.enpassant.EnPassantRules;
-import chess.strategies.extrarules.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
@@ -160,8 +159,8 @@ public class ChessGame {
 
         performMove(move, board);
 
-        for (MoveMadeObserver extraRuleset : extraRules) {
-            extraRuleset.moveMade(move, board);
+        for (ExtraRuleset extraRuleset : extraRules) {
+            extraRuleset.getMoveMadeObserver().moveMade(move, board);
         }
 
         teamTurn = teamTurn.getOpposite();

@@ -2,6 +2,7 @@ package chess.strategies.extrarules.castling;
 
 import chess.*;
 import chess.observers.BoardSetObserver;
+import chess.observers.MoveMadeObserver;
 import chess.strategies.extrarules.ExtraRuleset;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
@@ -38,38 +39,17 @@ public class CastlingRules implements ExtraRuleset {
     }
 
     @Override
+    public MoveMadeObserver getMoveMadeObserver() {
+        return new CastlingMoveMadeObserver(this);
+    }
+
+    @Override
     public boolean isMoveMatch(ChessMove move, ChessBoard board) {
         ChessPiece piece = board.getPiece(move.getStartPosition());
         return (piece.getPieceType() == PieceType.KING &&
                 Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) == 2);
     }
 
-    public void moveMade(ChessMove move, ChessBoard board) {
-        ChessPiece piece = board.getPiece(move.getEndPosition());
-        if (piece.getPieceType() == PieceType.KING) {
-            if (piece.getTeamColor() == TeamColor.WHITE) {
-                castlingOptions[0] = false;
-                castlingOptions[1] = false;
-            } else {
-                castlingOptions[2] = false;
-                castlingOptions[3] = false;
-            }
-        } else if (piece.getPieceType() == PieceType.ROOK) {
-            ChessPosition startPos = move.getStartPosition();
-            if (castlingOptions[0] && startPos.getRow() == 1 && startPos.getColumn() == 8) {
-                castlingOptions[0] = false;
-            }
-            if (castlingOptions[1] && startPos.getRow() == 1 && startPos.getColumn() == 1) {
-                castlingOptions[1] = false;
-            }
-            if (castlingOptions[2] && startPos.getRow() == 8 && startPos.getColumn() == 8) {
-                castlingOptions[2] = false;
-            }
-            if (castlingOptions[3] && startPos.getRow() == 8 && startPos.getColumn() == 1) {
-                castlingOptions[3] = false;
-            }
-        }
-    }
 
     public void setBoard(ChessBoard board) {
 
