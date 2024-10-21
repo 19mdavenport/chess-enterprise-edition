@@ -5,6 +5,8 @@ import chess.extrarules.ExtraRuleset;
 import chess.extrarules.castling.CastlingRules;
 import chess.extrarules.enpassant.EnPassantRules;
 import chess.strategies.performmove.MovePerformanceStrategy;
+import chess.strategies.validmoves.NormalValidMovesStrategy;
+import chess.strategies.validmoves.ValidMovesStrategy;
 
 import java.util.Collection;
 import java.util.List;
@@ -173,36 +175,12 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    @SuppressWarnings("ReturnOfNull")
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece piece = board.getPiece(startPosition);
-
-        if (piece == null) {
-            return null;
-        }
-
-        //Get all possible moves for the piece
-        Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
-
-        for (ExtraRuleset extraRuleset : extraRules) {
-            moves.addAll(extraRuleset.validMoves(board, startPosition));
-        }
-
-        //If making the move resulted in the king being placed in check, it's not legal
-        moves.removeIf(move -> isMoveInvalid(move, board));
-        return moves;
+        ValidMovesStrategy strategy = new NormalValidMovesStrategy(extraRules);
+        return strategy.validMoves(board, startPosition);
     }
 
-    private boolean isMoveInvalid(ChessMove move, ChessBoard board) {
-        try {
-            ChessBoard copyBoard = new ChessBoard(board);
-            ChessPiece movingPiece = copyBoard.getPiece(move.getStartPosition());
-            performMove(move, copyBoard);
-            return isInCheck(movingPiece.getTeamColor(), copyBoard);
-        } catch (InvalidMoveException e) {
-            return true;
-        }
-    }
+
 
     public static boolean isInCheck(TeamColor teamColor, ChessBoard board) {
         ChessPosition king = null;
