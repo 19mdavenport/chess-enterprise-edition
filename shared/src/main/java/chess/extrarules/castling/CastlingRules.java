@@ -4,6 +4,7 @@ import chess.*;
 import chess.observers.BoardSetObserver;
 import chess.observers.MoveMadeObserver;
 import chess.extrarules.ExtraRuleset;
+import chess.strategies.movematch.MoveMatcherStrategy;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Arrays;
@@ -44,15 +45,8 @@ public class CastlingRules implements ExtraRuleset {
     }
 
     @Override
-    public boolean isMoveMatch(ChessMove move, ChessBoard board) {
-        ChessPiece piece = board.getPiece(move.getStartPosition());
-        return (piece.getPieceType() == PieceType.KING &&
-                Math.abs(move.getStartPosition().getColumn() - move.getEndPosition().getColumn()) == 2);
-    }
-
-
-    public void setBoard(ChessBoard board) {
-
+    public MoveMatcherStrategy getMoveMatcherStrategy() {
+        return new CastlingMoveMatcherStrategy();
     }
 
     public Collection<ChessMove> validMoves(ChessBoard board, ChessPosition position) {

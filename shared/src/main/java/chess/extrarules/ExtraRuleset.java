@@ -5,6 +5,7 @@ import chess.ChessMove;
 import chess.ChessPosition;
 import chess.observers.BoardSetObserver;
 import chess.observers.MoveMadeObserver;
+import chess.strategies.movematch.MoveMatcherStrategy;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
@@ -16,7 +17,7 @@ public interface ExtraRuleset {
 
     MoveMadeObserver getMoveMadeObserver();
 
-    boolean isMoveMatch(ChessMove move, ChessBoard board);
+    MoveMatcherStrategy getMoveMatcherStrategy();
 
     Collection<ChessMove> validMoves(ChessBoard board, ChessPosition position);
 }

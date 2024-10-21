@@ -4,6 +4,7 @@ import chess.*;
 import chess.observers.BoardSetObserver;
 import chess.observers.MoveMadeObserver;
 import chess.extrarules.ExtraRuleset;
+import chess.strategies.movematch.MoveMatcherStrategy;
 import chess.strategies.performmove.MovePerformanceStrategy;
 
 import java.util.Collection;
@@ -38,11 +39,8 @@ public class EnPassantRules implements ExtraRuleset {
     }
 
     @Override
-    public boolean isMoveMatch(ChessMove move, ChessBoard board) {
-        ChessPiece piece = board.getPiece(move.getStartPosition());
-        return piece.getPieceType() == PieceType.PAWN &&
-                !Objects.equals(move.getStartPosition().getColumn(), move.getEndPosition().getColumn()) &&
-                board.getPiece(move.getEndPosition()) == null;
+    public MoveMatcherStrategy getMoveMatcherStrategy() {
+        return new EnPassantMoveMatcherStrategy();
     }
 
 

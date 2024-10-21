@@ -18,7 +18,7 @@ public class MovePerformanceStrategyFactory extends BaseFactory<MovePerformanceS
     private static MovePerformanceStrategy makeStrategy(Collection<ExtraRuleset> extraRules, ChessMove move,
                                                  ChessBoard board) {
         for (ExtraRuleset extraRuleset : extraRules) {
-            if (extraRuleset.isMoveMatch(move, board)) {
+            if (extraRuleset.getMoveMatcherStrategy().isMoveMatch(move, board)) {
                 return extraRuleset.getMovePerformanceStrategy();
             }
         }
